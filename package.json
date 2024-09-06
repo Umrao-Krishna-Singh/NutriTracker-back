@@ -6,7 +6,10 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "author": "Umrao <https://github.com/Umrao-Krishna-Singh>",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@nestjs/cli": "^10.4.5"
+  }
 }
