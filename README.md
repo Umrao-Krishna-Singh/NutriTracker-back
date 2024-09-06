@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="./src/public/logo-jpeg.jpg" width="200" alt="Nest Logo" />
+</p>
 # NutriTracker
 
 ## Overview
