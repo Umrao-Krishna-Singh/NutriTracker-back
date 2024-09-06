@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./src/public/Artboard 4.png" width="150" alt="Nest Logo" />
+  <img src="./src/public/Artboard 4.png" width="200" alt="Nest Logo" />
 </p>
 
 # NutriTracker
