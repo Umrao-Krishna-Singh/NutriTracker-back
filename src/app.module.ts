@@ -9,12 +9,12 @@ import { TransformInterceptor } from '@src/common/interceptors/res-transform.int
 import { ENV } from '@src/app.config'
 import {
     APP_FILTER,
-    APP_GUARD,
+    // APP_GUARD,
     APP_INTERCEPTOR,
-    APP_PIPE,
-    HttpAdapterHost,
+    // APP_PIPE,
+    // HttpAdapterHost,
 } from '@nestjs/core'
-import { ThrottlerGuard } from '@nestjs/throttler'
+// import { ThrottlerGuard } from '@nestjs/throttler'
 
 const debugFilter = winston.format((info, opts) => {
     if (opts?.invert) return info.level !== 'debug' ? info : false
