@@ -1,3 +1,7 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 generator kysely {
     provider = "prisma-kysely"
     output = "./keysley"
@@ -39,4 +43,104 @@ model User {
   email String?  @db.VarChar(256) @unique
 }
 
+model Food {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  /// @zod.string.max(250)
+  description String @db.VarChar(300) @unique
+  food_nutrition FoodNutrition?
+  food_tags FoodTags[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
 
+model Tag {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  tag_name String @db.VarChar(100) @unique
+  food_tags FoodTags[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model FoodTags {
+  id Int @id @db.UnsignedInt() @default(autoincrement())  
+  food Food @relation(fields: [food_id], references: [id])
+  food_id Int @db.UnsignedInt()
+  tag Tag @relation(fields: [tag_id], references: [id])
+  tag_id Int @db.UnsignedInt()
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model FoodNutrition {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  food Food @relation(fields: [food_id], references: [id])
+  food_id Int @db.UnsignedInt() @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  energy Decimal @db.Decimal(5,3)
+  protein	Decimal? @db.Decimal(5,3)
+  carbohydrate Decimal? @db.Decimal(5,3)
+  sugars_total Decimal? @db.Decimal(5,3)
+  fiber_total_dietary	Decimal? @db.Decimal(5,3)
+  total_fat	Decimal? @db.Decimal(5,3)
+  fatty_acids_total_saturated	Decimal? @db.Decimal(5,3)
+  fatty_acids_total_monounsaturated	Decimal? @db.Decimal(5,3)
+  fatty_acids_total_polyunsaturated	Decimal? @db.Decimal(5,3)
+  cholesterol	Decimal? @db.Decimal(5,3)
+  retinol	Decimal? @db.Decimal(5,3)
+  vitamin_A_RAE Decimal @db.Decimal(5,3)
+  carotene_alpha	Decimal? @db.Decimal(5,3)
+  carotene_beta	Decimal? @db.Decimal(5,3)
+  cryptoxanthin_beta	Decimal? @db.Decimal(5,3)
+  lycopene	Decimal? @db.Decimal(5,3)
+  lutein_zeaxanthin	Decimal? @db.Decimal(5,3)
+  thiamin	Decimal? @db.Decimal(5,3)
+  riboflavin	Decimal? @db.Decimal(5,3)
+  niacin	Decimal? @db.Decimal(5,3)
+  vitamin_B_6	Decimal? @db.Decimal(5,3)
+  folic_acid	Decimal? @db.Decimal(5,3)
+  folate_food	Decimal? @db.Decimal(5,3)
+  folate_DFE	Decimal? @db.Decimal(5,3)
+  folate_total	Decimal? @db.Decimal(5,3)
+  choline_total	Decimal? @db.Decimal(5,3)
+  vitamin_B_12	Decimal? @db.Decimal(5,3)
+  vitamin_B_12added	Decimal? @db.Decimal(5,3)
+  vitamin_C	Decimal? @db.Decimal(5,3)
+  vitamin_D_D2_D3	Decimal? @db.Decimal(5,3)
+  vitamin_E_alpha_tocopherol	Decimal? @db.Decimal(5,3)
+  vitamin_Eadded	Decimal? @db.Decimal(5,3)
+  vitamin_K_phylloquinone	Decimal? @db.Decimal(5,3)
+  calcium	Decimal? @db.Decimal(5,3)
+  phosphorus	Decimal? @db.Decimal(5,3)
+  magnesium	Decimal? @db.Decimal(5,3)
+  iron	Decimal? @db.Decimal(5,3)
+  zinc	Decimal? @db.Decimal(5,3)
+  copper	Decimal? @db.Decimal(5,3)
+  selenium	Decimal? @db.Decimal(5,3)
+  potassium	Decimal? @db.Decimal(5,3)
+  sodium	Decimal? @db.Decimal(5,3)
+  caffeine	Decimal? @db.Decimal(5,3)
+  theobromine	Decimal? @db.Decimal(5,3)
+  alcohol	Decimal? @db.Decimal(5,3)
+  fa_4_0	Decimal? @db.Decimal(5,3)
+  fa_6_0	Decimal? @db.Decimal(5,3)
+  fa_8_0	Decimal? @db.Decimal(5,3)
+  fa_10_0 Decimal? @db.Decimal(5,3)
+	fa_12_0 Decimal? @db.Decimal(5,3)
+	fa_14_0 Decimal? @db.Decimal(5,3)
+	fa_16_0 Decimal? @db.Decimal(5,3)
+	fa_18_0 Decimal? @db.Decimal(5,3)
+	fa_16_1 Decimal? @db.Decimal(5,3)
+	fa_18_1 Decimal? @db.Decimal(5,3)
+	fa_20_1 Decimal? @db.Decimal(5,3)
+	fa_22_1 Decimal? @db.Decimal(5,3)
+	fa_18_2 Decimal? @db.Decimal(5,3)
+	fa_18_3 Decimal? @db.Decimal(5,3)
+	fa_18_4 Decimal? @db.Decimal(5,3)
+	fa_20_4 Decimal? @db.Decimal(5,3)
+	fa_20_5_n_3 Decimal? @db.Decimal(5,3)
+	fa_22_5_n_3 Decimal? @db.Decimal(5,3)
+	fa_22_6_n_3 Decimal? @db.Decimal(5,3)
+  water Decimal? @db.Decimal(5,3)
+}
