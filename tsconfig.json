@@ -1,4 +1,10 @@
 {
+    "ts-node": {
+        // It is faster to skip typechecking.
+        "transpileOnly": true,
+        "esm": true,
+        "files": true
+    },
     "compilerOptions": {
         "module": "commonjs",
         "declaration": true,
@@ -19,8 +25,8 @@
         "paths": {
             "@src": ["./src"],
             "@src/*": ["./src/*"],
-            "@prisma": ["./prisma"],
-            "@prisma/*": ["./prisma/*"]
+            "@prism": ["./prisma"],
+            "@prism/*": ["./prisma/*"]
         }
     }
 }
