@@ -1,10 +1,10 @@
 import { FastifyRequest } from 'fastify'
 
-import { User } from '@prisma/zod/index'
+import { User } from '@prism/zod/index'
 import { ExecutionContext } from '@nestjs/common'
 
 export function getNestExecutionContextRequest(
-  context: ExecutionContext,
+    context: ExecutionContext,
 ): FastifyRequest & { owner?: User } & Record<string, any> {
-  return context.switchToHttp().getRequest<FastifyRequest>()
+    return context.switchToHttp().getRequest<FastifyRequest>()
 }

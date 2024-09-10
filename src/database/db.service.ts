@@ -2,7 +2,7 @@ import { Injectable, OnModuleInit, Logger } from '@nestjs/common'
 import { Kysely, MysqlDialect } from 'kysely'
 import { createPool } from 'mysql2'
 import { ENV, isDev } from '@src/app.config'
-import { DB } from '@prisma/keysley/types'
+import { DB } from '@prism/keysley/types'
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
