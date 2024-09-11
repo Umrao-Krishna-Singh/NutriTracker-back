@@ -6,7 +6,8 @@
         "files": true
     },
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
         "declaration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
