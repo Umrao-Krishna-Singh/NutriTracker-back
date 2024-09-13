@@ -1,9 +1,4 @@
 {
-    "ts-node": {
-        "transpileOnly": true,
-        "esm": true,
-        "files": true
-    },
     "compilerOptions": {
         //for now keep it as commonjs but later add a bundler into the process and change this to esnext and moduleresolution to bundler
         "module": "CommonJS",
