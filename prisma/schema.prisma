@@ -50,7 +50,7 @@ model Food {
   food_nutrition FoodNutrition?
   food_tags FoodTags[]
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now()) 
 }
 
 model Tag {
@@ -58,7 +58,7 @@ model Tag {
   tag_name String @db.VarChar(100) @unique
   food_tags FoodTags[]
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now()) 
 }
 
 model FoodTags {
@@ -68,7 +68,7 @@ model FoodTags {
   tag Tag @relation(fields: [tag_id], references: [id])
   tag_id Int @db.UnsignedInt()
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now()) 
 }
 
 model FoodNutrition {
@@ -76,7 +76,7 @@ model FoodNutrition {
   food Food @relation(fields: [food_id], references: [id])
   food_id Int @db.UnsignedInt() @unique
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @default(now()) 
 
   energy Decimal @db.Decimal(5,3)
   protein	Decimal? @db.Decimal(5,3)

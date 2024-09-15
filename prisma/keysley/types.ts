@@ -12,13 +12,13 @@ export type Food = {
      */
     description: string
     created_at: Generated<Timestamp>
-    updated_at: Timestamp
+    updated_at: Generated<Timestamp>
 }
 export type FoodNutrition = {
     id: Generated<number>
     food_id: number
     created_at: Generated<Timestamp>
-    updated_at: Timestamp
+    updated_at: Generated<Timestamp>
     energy: string
     protein: string | null
     carbohydrate: string | null
@@ -90,13 +90,13 @@ export type FoodTags = {
     food_id: number
     tag_id: number
     created_at: Generated<Timestamp>
-    updated_at: Timestamp
+    updated_at: Generated<Timestamp>
 }
 export type Tag = {
     id: Generated<number>
     tag_name: string
     created_at: Generated<Timestamp>
-    updated_at: Timestamp
+    updated_at: Generated<Timestamp>
 }
 export type User = {
     id: Generated<number>
