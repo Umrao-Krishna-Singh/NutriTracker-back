@@ -77,7 +77,8 @@ model FoodNutrition {
   food_id Int @db.UnsignedInt() @unique
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
-
+  
+  //multiply all the values in the following fields by 1000 before entering them. When showing to frontend, after all calculations are done, divide the values by 1000
   energy Int @db.UnsignedInt()
   protein	Int? @db.UnsignedInt()
   carbohydrate Int? @db.UnsignedInt()
