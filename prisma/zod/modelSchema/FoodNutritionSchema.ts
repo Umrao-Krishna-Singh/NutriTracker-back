@@ -74,10 +74,12 @@ export const FoodNutritionSchema = z.object({
                 "Field 'retinol' must be a Decimal. Location: ['Models', 'FoodNutrition']",
         })
         .nullable(),
-    vitamin_A_RAE: z.instanceof(Prisma.Decimal, {
-        message:
-            "Field 'vitamin_A_RAE' must be a Decimal. Location: ['Models', 'FoodNutrition']",
-    }),
+    vitamin_A_RAE: z
+        .instanceof(Prisma.Decimal, {
+            message:
+                "Field 'vitamin_A_RAE' must be a Decimal. Location: ['Models', 'FoodNutrition']",
+        })
+        .nullable(),
     carotene_alpha: z
         .instanceof(Prisma.Decimal, {
             message:

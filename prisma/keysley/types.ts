@@ -30,7 +30,7 @@ export type FoodNutrition = {
     fatty_acids_total_polyunsaturated: string | null
     cholesterol: string | null
     retinol: string | null
-    vitamin_A_RAE: string
+    vitamin_A_RAE: string | null
     carotene_alpha: string | null
     carotene_beta: string | null
     cryptoxanthin_beta: string | null

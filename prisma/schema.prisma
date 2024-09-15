@@ -89,7 +89,7 @@ model FoodNutrition {
   fatty_acids_total_polyunsaturated	Decimal? @db.Decimal(5,3)
   cholesterol	Decimal? @db.Decimal(5,3)
   retinol	Decimal? @db.Decimal(5,3)
-  vitamin_A_RAE Decimal @db.Decimal(5,3)
+  vitamin_A_RAE Decimal? @db.Decimal(5,3)
   carotene_alpha	Decimal? @db.Decimal(5,3)
   carotene_beta	Decimal? @db.Decimal(5,3)
   cryptoxanthin_beta	Decimal? @db.Decimal(5,3)
