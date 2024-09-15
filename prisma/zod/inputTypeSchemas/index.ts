@@ -6,5 +6,3 @@ export { FoodTagsScalarFieldEnumSchema } from './FoodTagsScalarFieldEnumSchema';
 export { FoodNutritionScalarFieldEnumSchema } from './FoodNutritionScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
-export { DecimalJsLikeSchema } from './DecimalJsLikeSchema';
-export { isValidDecimalInput } from './isValidDecimalInput';
