@@ -203,7 +203,7 @@ export default async function seedFoodNutrients() {
     }
 
     await client.closeConnection()
-    console.error('Rows with errors:- \n', errorRows)
+    if (errorRows.length) console.error('Rows with errors:- \n', errorRows)
 }
 
 const insertToDb = async (
