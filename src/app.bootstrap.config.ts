@@ -4,6 +4,8 @@ const FASTIFY_OPTIONS = {
     trustProxy: true,
     ignoreTrailingSlash: true,
     connectionTimeout: 60000,
+    keepAliveTimeout: 30000,
+    requestTimeout: 31000,
 }
 
 export const app: FastifyAdapter = new FastifyAdapter(FASTIFY_OPTIONS)
