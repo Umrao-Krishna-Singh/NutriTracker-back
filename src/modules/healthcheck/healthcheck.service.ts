@@ -1,12 +1,13 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { Injectable, Inject, Logger } from '@nestjs/common'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
 
 @Injectable()
 export class HealthCheckService {
     private db: DatabaseType
-
+    private readonly logger: Logger
     constructor(@Inject(DatabaseService) database: DatabaseService) {
         this.db = database.db()
+        this.logger = new Logger(HealthCheckService.name)
     }
 
     async getHello(): Promise<'Success from backend!'> {
