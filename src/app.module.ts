@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import { HealthCheckModule } from '@src/modules/healthcheck/healthcheck.module'
+import { SearchModule } from '@src/modules/search/search.module'
 import { DatabaseModule } from '@src/database/db.module'
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
@@ -48,7 +49,7 @@ const debugFilter = winston.format((info, opts) => {
                         debugFilter({ invert: true }),
                         winston.format.timestamp(),
                         winston.format.ms(),
-                        nestWinstonModuleUtilities.format.nestLike('Shopper', {
+                        nestWinstonModuleUtilities.format.nestLike('NutriTracker', {
                             colors: true,
                             prettyPrint: true,
                             processId: true,
@@ -68,6 +69,7 @@ const debugFilter = winston.format((info, opts) => {
         }),
         DatabaseModule,
         HealthCheckModule,
+        SearchModule,
     ],
     providers: [
         { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
