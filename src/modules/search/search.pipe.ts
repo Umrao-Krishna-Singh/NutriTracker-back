@@ -9,9 +9,7 @@ export class GetFoodSearchValidationPipe implements PipeTransform {
     transform(value: unknown) {
         const { success, data, error: zodError } = this.getPostSchema.safeParse(value)
         if (!success) throw new ZodValidationException(zodError)
-
         const parsedValue: Record<'search', string> = data
-
         return parsedValue
     }
 }

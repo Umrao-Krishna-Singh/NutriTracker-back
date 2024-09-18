@@ -12,14 +12,12 @@ export class SearchService {
         this.logger = new Logger(SearchService.name)
     }
 
-    async getFoodDetails(search: string): Promise<FoodSearchResponseDto | null> {
-        const result = await this.db
+    async getFoodDetails(search: string): Promise<FoodSearchResponseDto[]> {
+        return await this.db
             .selectFrom('Food')
             .innerJoin('FoodNutrition', 'Food.id', 'FoodNutrition.food_id')
             .select(['Food.id', 'Food.description'])
-            .where('Food.description', '=', search)
-            .executeTakeFirst()
-
-        return result ? result : null
+            .where('Food.description', 'like', '%' + search + '%')
+            .execute()
     }
 }

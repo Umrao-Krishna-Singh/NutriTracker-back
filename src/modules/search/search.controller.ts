@@ -16,9 +16,7 @@ export class SearchController {
     @UsePipes(new GetFoodSearchValidationPipe())
     async getFoodDetails(
         @Query() foodSearchDto: FoodSearchDto,
-    ): Promise<FoodSearchResponseDto | null> {
-        const data = await this.searchService.getFoodDetails(foodSearchDto.search)
-
-        return data
+    ): Promise<FoodSearchResponseDto[]> {
+        return await this.searchService.getFoodDetails(foodSearchDto.search)
     }
 }
