@@ -1,6 +1,6 @@
 import { Injectable, Inject, Logger } from '@nestjs/common'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
-import { FoodSearchResponseDto, FoodSearchDto } from './search.dto'
+import { FoodSearchResponseDto } from './search.dto'
 
 @Injectable()
 export class SearchService {
