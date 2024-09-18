@@ -20,7 +20,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
     intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
         return next.handle().pipe(
             map((data) => {
-                if (!data) return { statusCode: 200, message: 'Success' }
+                if (!data) return { statusCode: 200, message: 'Success', data: null }
                 else return { statusCode: 200, message: 'Success', data }
             }),
         )
