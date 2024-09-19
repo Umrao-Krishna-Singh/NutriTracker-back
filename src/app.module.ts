@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { HealthCheckModule } from '@src/modules/healthcheck/healthcheck.module'
-import { SearchModule } from '@src/modules/search/search.module'
+import { SearchModule } from '@src/modules/nutrition/nutrition.module'
 import { DatabaseModule } from '@src/database/db.module'
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston'
 import * as winston from 'winston'

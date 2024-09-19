@@ -1,8 +1,8 @@
 import { Get, UsePipes, Query, Logger } from '@nestjs/common'
-import { SearchService } from './search.service'
+import { SearchService } from './nutrition.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
-import { FoodSearchDto, FoodSearchResponseDto } from './search.dto'
-import { GetFoodSearchValidationPipe } from './search.pipe'
+import { FoodSearchDto, FoodSearchResponseDto } from './nutrition.dto'
+import { GetFoodSearchValidationPipe } from './nutrition.pipe'
 
 @ApiController('search')
 export class SearchController {
