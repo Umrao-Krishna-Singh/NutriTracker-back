@@ -4,7 +4,7 @@ import { ApiController } from '@src/common/decorators/api-controller.decorator'
 import { FoodSearchDto, FoodSearchResponseDto } from './nutrition.dto'
 import { GetFoodSearchValidationPipe } from './nutrition.pipe'
 
-@ApiController('search')
+@ApiController('nutrition')
 export class SearchController {
     private readonly logger: Logger
 
@@ -12,7 +12,7 @@ export class SearchController {
         this.logger = new Logger(SearchController.name)
     }
 
-    @Get('/food')
+    @Get('/food-details')
     @UsePipes(new GetFoodSearchValidationPipe())
     async getFoodDetails(
         @Query() foodSearchDto: FoodSearchDto,
