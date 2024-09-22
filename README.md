@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./src/public/logo/logo-png.png" width="200" alt="Logo" />
+  <img src="./src/public/logo/logo.svg" width="200" alt="Logo" />
 </p>
 
 # NutriTracker
