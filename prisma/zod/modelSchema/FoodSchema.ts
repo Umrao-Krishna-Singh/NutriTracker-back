@@ -7,6 +7,7 @@ import { z } from 'zod';
 export const FoodSchema = z.object({
   id: z.number().int(),
   description: z.string().max(250),
+  fdc_id: z.number().int().nullable(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })

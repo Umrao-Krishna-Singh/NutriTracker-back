@@ -1,5 +1,5 @@
 import { z } from 'zod';
 
-export const FoodNutritionScalarFieldEnumSchema = z.enum(['id','food_id','created_at','updated_at','energy','protein','carbohydrate','sugars_total','fiber_total_dietary','total_fat','fatty_acids_total_saturated','fatty_acids_total_monounsaturated','fatty_acids_total_polyunsaturated','cholesterol','retinol','vitamin_A_RAE','carotene_alpha','carotene_beta','cryptoxanthin_beta','lycopene','lutein_zeaxanthin','thiamin','riboflavin','niacin','vitamin_B_6','folic_acid','folate_food','folate_DFE','folate_total','choline_total','vitamin_B_12','vitamin_B_12added','vitamin_C','vitamin_D_D2_D3','vitamin_E_alpha_tocopherol','vitamin_Eadded','vitamin_K_phylloquinone','calcium','phosphorus','magnesium','iron','zinc','copper','selenium','potassium','sodium','caffeine','theobromine','alcohol','fa_4_0','fa_6_0','fa_8_0','fa_10_0','fa_12_0','fa_14_0','fa_16_0','fa_18_0','fa_16_1','fa_18_1','fa_20_1','fa_22_1','fa_18_2','fa_18_3','fa_18_4','fa_20_4','fa_20_5_n_3','fa_22_5_n_3','fa_22_6_n_3','water']);
+export const FoodNutritionScalarFieldEnumSchema = z.enum(['id','food_id','nutrition_id','created_at','updated_at']);
 
 export default FoodNutritionScalarFieldEnumSchema;
