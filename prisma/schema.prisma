@@ -47,8 +47,28 @@ model Food {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   /// @zod.string.max(250)
   description String @db.VarChar(300) @unique
-  food_nutrition FoodNutrition?
+  food_nutrition FoodNutrition[]
+  fdc_id Int? @db.UnsignedInt() @unique
   food_tags FoodTags[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) 
+}
+
+model Nutrition {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  name String @db.VarChar(200) @unique
+  fdc_nutrient_id Int? @db.UnsignedInt() @unique
+  food_nutrition FoodNutrition[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) 
+}
+
+model FoodNutrition {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  food Food @relation(fields: [food_id], references: [id])
+  food_id Int @db.UnsignedInt()
+  nutrition Nutrition @relation(fields: [nutrition_id], references: [id])
+  nutrition_id Int @db.UnsignedInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
 }
@@ -69,79 +89,4 @@ model FoodTags {
   tag_id Int @db.UnsignedInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
-}
-
-model FoodNutrition {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
-  food Food @relation(fields: [food_id], references: [id])
-  food_id Int @db.UnsignedInt() @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) 
-  
-  //multiply all the values in the following fields by 1000 before entering them. When showing to frontend, after all calculations are done, divide the values by 1000
-  energy Int @db.UnsignedInt()
-  protein	Int? @db.UnsignedInt()
-  carbohydrate Int? @db.UnsignedInt()
-  sugars_total Int? @db.UnsignedInt()
-  fiber_total_dietary	Int? @db.UnsignedInt()
-  total_fat	Int? @db.UnsignedInt()
-  fatty_acids_total_saturated	Int? @db.UnsignedInt()
-  fatty_acids_total_monounsaturated	Int? @db.UnsignedInt()
-  fatty_acids_total_polyunsaturated	Int? @db.UnsignedInt()
-  cholesterol	Int? @db.UnsignedInt()
-  retinol	Int? @db.UnsignedInt()
-  vitamin_A_RAE Int? @db.UnsignedInt()
-  carotene_alpha	Int? @db.UnsignedInt()
-  carotene_beta	Int? @db.UnsignedInt()
-  cryptoxanthin_beta	Int? @db.UnsignedInt()
-  lycopene	Int? @db.UnsignedInt()
-  lutein_zeaxanthin	Int? @db.UnsignedInt()
-  thiamin	Int? @db.UnsignedInt()
-  riboflavin	Int? @db.UnsignedInt()
-  niacin	Int? @db.UnsignedInt()
-  vitamin_B_6	Int? @db.UnsignedInt()
-  folic_acid	Int? @db.UnsignedInt()
-  folate_food	Int? @db.UnsignedInt()
-  folate_DFE	Int? @db.UnsignedInt()
-  folate_total	Int? @db.UnsignedInt()
-  choline_total	Int? @db.UnsignedInt()
-  vitamin_B_12	Int? @db.UnsignedInt()
-  vitamin_B_12added	Int? @db.UnsignedInt()
-  vitamin_C	Int? @db.UnsignedInt()
-  vitamin_D_D2_D3	Int? @db.UnsignedInt()
-  vitamin_E_alpha_tocopherol	Int? @db.UnsignedInt()
-  vitamin_Eadded	Int? @db.UnsignedInt()
-  vitamin_K_phylloquinone	Int? @db.UnsignedInt()
-  calcium	Int? @db.UnsignedInt()
-  phosphorus	Int? @db.UnsignedInt()
-  magnesium	Int? @db.UnsignedInt()
-  iron	Int? @db.UnsignedInt()
-  zinc	Int? @db.UnsignedInt()
-  copper	Int? @db.UnsignedInt()
-  selenium	Int? @db.UnsignedInt()
-  potassium	Int? @db.UnsignedInt()
-  sodium	Int? @db.UnsignedInt()
-  caffeine	Int? @db.UnsignedInt()
-  theobromine	Int? @db.UnsignedInt()
-  alcohol	Int? @db.UnsignedInt()
-  fa_4_0	Int? @db.UnsignedInt()
-  fa_6_0	Int? @db.UnsignedInt()
-  fa_8_0	Int? @db.UnsignedInt()
-  fa_10_0 Int? @db.UnsignedInt()
-	fa_12_0 Int? @db.UnsignedInt()
-	fa_14_0 Int? @db.UnsignedInt()
-	fa_16_0 Int? @db.UnsignedInt()
-	fa_18_0 Int? @db.UnsignedInt()
-	fa_16_1 Int? @db.UnsignedInt()
-	fa_18_1 Int? @db.UnsignedInt()
-	fa_20_1 Int? @db.UnsignedInt()
-	fa_22_1 Int? @db.UnsignedInt()
-	fa_18_2 Int? @db.UnsignedInt()
-	fa_18_3 Int? @db.UnsignedInt()
-	fa_18_4 Int? @db.UnsignedInt()
-	fa_20_4 Int? @db.UnsignedInt()
-	fa_20_5_n_3 Int? @db.UnsignedInt()
-	fa_22_5_n_3 Int? @db.UnsignedInt()
-	fa_22_6_n_3 Int? @db.UnsignedInt()
-  water Int? @db.UnsignedInt()
 }
