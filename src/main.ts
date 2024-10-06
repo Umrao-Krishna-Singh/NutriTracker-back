@@ -19,6 +19,7 @@ async function bootstrap() {
             const allow = bootstrapConfig.hosts.some((host) => host.test(origin))
             callback(null, allow)
         },
+
         credentials: true,
     })
 
