@@ -15,4 +15,8 @@ NutriTracker is a comprehensive application designed to help users monitor their
 -   **Goal Setting**: Set and monitor personalized dietary goals.
 -   **Analytics**: View detailed analytics and reports on your nutritional intake.
 
+## Requirements
+
+-   This project uses git lfs, turn it on in your github to clone and use the project
+
 ## This is a work in progress
