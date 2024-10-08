@@ -45,13 +45,20 @@ model User {
 
 model Food {
   id Int @id @db.UnsignedInt() @default(autoincrement())
-  /// @zod.string.max(250)
+  /// @zod.string.max(300)
   description String @db.VarChar(300) @unique
   food_nutrition FoodNutrition[]
   fdc_id Int? @db.UnsignedInt() @unique
   food_tags FoodTags[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
+}
+
+model DupFoodDescriptions {
+  id Int @id @db.UnsignedInt() @default(autoincrement())
+  /// @zod.string.max(300)
+  description String @db.VarChar(300) @unique
+  fdc_id Int @db.UnsignedInt() @unique
 }
 
 model Nutrition {
