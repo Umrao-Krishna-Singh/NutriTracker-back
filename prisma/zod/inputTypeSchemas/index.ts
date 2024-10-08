@@ -1,6 +1,7 @@
 export { TransactionIsolationLevelSchema } from './TransactionIsolationLevelSchema';
 export { UserScalarFieldEnumSchema } from './UserScalarFieldEnumSchema';
 export { FoodScalarFieldEnumSchema } from './FoodScalarFieldEnumSchema';
+export { DupFoodDescriptionsScalarFieldEnumSchema } from './DupFoodDescriptionsScalarFieldEnumSchema';
 export { NutritionScalarFieldEnumSchema } from './NutritionScalarFieldEnumSchema';
 export { FoodNutritionScalarFieldEnumSchema } from './FoodNutritionScalarFieldEnumSchema';
 export { TagScalarFieldEnumSchema } from './TagScalarFieldEnumSchema';

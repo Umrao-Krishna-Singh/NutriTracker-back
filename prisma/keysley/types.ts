@@ -4,10 +4,18 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+export type DupFoodDescriptions = {
+    id: Generated<number>;
+    /**
+     * @zod.string.max(300)
+     */
+    description: string;
+    fdc_id: number;
+};
 export type Food = {
     id: Generated<number>;
     /**
-     * @zod.string.max(250)
+     * @zod.string.max(300)
      */
     description: string;
     fdc_id: number | null;
@@ -57,6 +65,7 @@ export type User = {
     email: string | null;
 };
 export type DB = {
+    DupFoodDescriptions: DupFoodDescriptions;
     Food: Food;
     FoodNutrition: FoodNutrition;
     FoodTags: FoodTags;
