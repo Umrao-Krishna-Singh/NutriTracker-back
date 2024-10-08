@@ -59,6 +59,8 @@ model DupFoodDescriptions {
   /// @zod.string.max(300)
   description String @db.VarChar(300) @unique
   fdc_id Int @db.UnsignedInt() @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) 
 }
 
 model Nutrition {
