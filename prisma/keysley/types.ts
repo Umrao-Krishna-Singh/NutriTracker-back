@@ -11,6 +11,8 @@ export type DupFoodDescriptions = {
      */
     description: string;
     fdc_id: number;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
 };
 export type Food = {
     id: Generated<number>;
