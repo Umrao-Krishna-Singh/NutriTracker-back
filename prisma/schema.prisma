@@ -54,6 +54,11 @@ model Food {
   updated_at DateTime @default(now()) 
 }
 
+
+//type
+// 1 - duplicate fdc id
+// 2 - duplicate description
+// 3 - both duplicate
 model DuplicateFood {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   description String @db.VarChar(300) 
