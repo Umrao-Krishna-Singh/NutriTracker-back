@@ -149,7 +149,8 @@ const insertToDb = async (
             dupFood.push({ type: 1, fdc_id: item.fdc_id, description: item.description })
     }
 
-    await trx.insertInto('Food').values(food).executeTakeFirstOrThrow()
+    await trx.insertInto('Food').values(food).execute()
+    await syncRecords(trx)
     console.log('--------insertion done--------------')
 }
 
@@ -158,9 +159,68 @@ const insertDuplicates = async (trx: Transaction<DB>, dupFood: dupFoodItems[]) =
     if (!dupFood.length)
         return console.log('--------nothing duplicate to insert--------------')
 
-    await trx.insertInto('DuplicateFood').values(dupFood).executeTakeFirstOrThrow()
+    await trx.insertInto('DuplicateFood').values(dupFood).execute()
 
     console.log('--------insertion done--------------')
+}
+
+const syncRecords = async (trx: Transaction<DB>) => {
+    await trx
+        .updateTable('DuplicateFood')
+        .set({ type: 3 })
+        .where((eb) =>
+            eb.or([
+                eb(
+                    'DuplicateFood.id',
+                    'in',
+                    trx
+                        .selectFrom('DuplicateFood')
+                        .innerJoin(
+                            (eb) =>
+                                eb
+                                    .selectFrom('DuplicateFood as Dup')
+                                    .select(['Dup.description'])
+                                    .groupBy('Dup.description')
+                                    .having(sql<SqlBool>`COUNT(Dup.description) > 1`)
+                                    .as('DuplicateDescs'),
+                            (join) =>
+                                join
+                                    .onRef(
+                                        'DuplicateFood.description',
+                                        '=',
+                                        'DuplicateDescs.description',
+                                    )
+                                    .on('DuplicateFood.type', '=', 2),
+                        )
+                        .select(['DuplicateFood.id']),
+                ),
+                eb(
+                    'DuplicateFood.id',
+                    'in',
+                    trx
+                        .selectFrom('DuplicateFood')
+                        .innerJoin(
+                            (eb) =>
+                                eb
+                                    .selectFrom('DuplicateFood as Dup')
+                                    .select(['Dup.fdc_id'])
+                                    .groupBy('Dup.fdc_id')
+                                    .having(sql<SqlBool>`COUNT(Dup.fdc_id) > 1`)
+                                    .as('DuplicateFdc'),
+                            (join) =>
+                                join
+                                    .onRef(
+                                        'DuplicateFood.fdc_id',
+                                        '=',
+                                        'DuplicateFdc.fdc_id',
+                                    )
+                                    .on('DuplicateFood.type', '=', 1),
+                        )
+                        .select(['DuplicateFood.id']),
+                ),
+            ]),
+        )
+        .execute()
 }
 
 const writeErrors = (errors: unknown[] | string, chunkCount: number) => {
