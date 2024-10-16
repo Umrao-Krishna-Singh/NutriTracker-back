@@ -15,7 +15,7 @@ export type DuplicateFood = {
 export type Food = {
     id: Generated<number>;
     /**
-     * @zod.string.max(300)
+     * @zod.string.max(500)
      */
     description: string;
     fdc_id: number | null;
