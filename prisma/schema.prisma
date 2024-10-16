@@ -45,8 +45,8 @@ model User {
 
 model Food {
   id Int @id @db.UnsignedInt() @default(autoincrement())
-  /// @zod.string.max(300)
-  description String @db.VarChar(300) @unique
+  /// @zod.string.max(500)
+  description String @db.VarChar(500) @unique
   food_nutrition FoodNutrition[]
   fdc_id Int? @db.UnsignedInt() @unique
   food_tags FoodTags[]
@@ -61,7 +61,7 @@ model Food {
 // 3 - both duplicate
 model DuplicateFood {
   id Int @id @db.UnsignedInt() @default(autoincrement())
-  description String @db.VarChar(300) 
+  description String @db.VarChar(500) 
   fdc_id Int @db.UnsignedInt() 
   type Int @db.SmallInt()
   created_at DateTime @default(now())
