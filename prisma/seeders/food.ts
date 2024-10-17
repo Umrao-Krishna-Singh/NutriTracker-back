@@ -73,8 +73,6 @@ export default async function seedFdcFood() {
         fdcIdSet = new Set()
         dupFood = []
         errors = []
-
-        if (chunkCount === 567) break
     }
 
     try {
