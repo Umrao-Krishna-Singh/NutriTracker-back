@@ -1,10 +1,7 @@
 import { DatabaseService } from './db_connection'
-// import { FoodOptionalDefaults, DuplicateFoodOptionalDefaults } from '../zod/modelSchema'
 import fs from 'fs'
-// import { z } from 'zod'
 import { SqlBool, Transaction, sql } from 'kysely'
 import { DB } from '@prism/keysley/types'
-// import { join } from 'path'
 
 type foodItems = {
     fdc_id: number
@@ -26,6 +23,8 @@ const errorFilePath = './prisma/seeders/seed_errors.txt'
 let descSet: Set<string> = new Set()
 let fdcIdSet: Set<number> = new Set()
 let dupFood: dupFoodItems[] = []
+
+if (!fs.existsSync(errorFilePath)) fs.writeFileSync(errorFilePath, '')
 
 export default async function seedFdcFood() {
     if (!fs.existsSync(filePath)) throw new Error(`file: ${filePath} does not exist`)
