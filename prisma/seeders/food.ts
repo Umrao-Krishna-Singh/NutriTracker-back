@@ -175,62 +175,47 @@ const insertDuplicates = async (trx: Transaction<DB>, dupFood: dupFoodItems[]) =
 }
 
 const syncRecords = async (trx: Transaction<DB>) => {
-    await trx
-        .updateTable('DuplicateFood')
-        .set({ type: 3 })
+    const ids = await trx
+        .selectFrom('DuplicateFood')
+        .select('DuplicateFood.id')
         .where((eb) =>
-            eb.or([
-                eb(
-                    'DuplicateFood.id',
-                    'in',
-                    trx
-                        .selectFrom('DuplicateFood')
-                        .innerJoin(
-                            (eb) =>
-                                eb
-                                    .selectFrom('DuplicateFood as Dup')
-                                    .select(['Dup.description'])
-                                    .groupBy('Dup.description')
-                                    .having(sql<SqlBool>`COUNT(Dup.description) > 1`)
-                                    .as('DuplicateDescs'),
-                            (join) =>
-                                join
-                                    .onRef(
-                                        'DuplicateFood.description',
-                                        '=',
-                                        'DuplicateDescs.description',
-                                    )
-                                    .on('DuplicateFood.type', '=', 2),
-                        )
-                        .select(['DuplicateFood.id']),
-                ),
-                eb(
-                    'DuplicateFood.id',
-                    'in',
-                    trx
-                        .selectFrom('DuplicateFood')
-                        .innerJoin(
-                            (eb) =>
-                                eb
-                                    .selectFrom('DuplicateFood as Dup')
-                                    .select(['Dup.fdc_id'])
-                                    .groupBy('Dup.fdc_id')
-                                    .having(sql<SqlBool>`COUNT(Dup.fdc_id) > 1`)
-                                    .as('DuplicateFdc'),
-                            (join) =>
-                                join
-                                    .onRef(
-                                        'DuplicateFood.fdc_id',
-                                        '=',
-                                        'DuplicateFdc.fdc_id',
-                                    )
-                                    .on('DuplicateFood.type', '=', 1),
-                        )
-                        .select(['DuplicateFood.id']),
-                ),
-            ]),
+            eb(
+                'DuplicateFood.id',
+                'in',
+                trx
+                    .selectFrom('DuplicateFood')
+                    .innerJoin(
+                        (eb) =>
+                            eb
+                                .selectFrom('DuplicateFood as Dup')
+                                .select(['Dup.description', 'Dup.fdc_id'])
+                                .groupBy(['Dup.description', 'Dup.fdc_id'])
+                                .having(
+                                    sql<SqlBool>`COUNT(Dup.description) > 1 AND COUNT(Dup.fdc_id) > 1`,
+                                )
+                                .as('DuplicateDescs'),
+                        (join) =>
+                            join
+                                .onRef(
+                                    'DuplicateFood.description',
+                                    '=',
+                                    'DuplicateDescs.description',
+                                )
+                                .on('DuplicateFood.type', '=', 2),
+                    )
+                    .select(['DuplicateFood.id']),
+            ),
         )
         .execute()
+
+    const idArr = ids.map((item) => item.id)
+
+    if (idArr.length)
+        await trx
+            .updateTable('DuplicateFood')
+            .set({ type: 3 })
+            .where('DuplicateFood.id', 'in', idArr)
+            .execute()
 }
 
 const writeErrors = (errors: unknown[] | string, chunkCount: number) => {
