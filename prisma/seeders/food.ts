@@ -18,7 +18,7 @@ type dupFoodItems = {
 }
 
 const client = new DatabaseService()
-const errors: unknown[] = []
+let errors: unknown[] = []
 let chunkCount = 0
 let results: foodItems[] = []
 const filePath = './prisma/data/zipped/food.csv'
@@ -39,7 +39,6 @@ export default async function seedFdcFood() {
         chunkCount++
         const chunkData: string[] = chunk.toString().split('\n')
         const firstRow: string = chunkData[0]
-        console.log(chunkData)
         if (chunkCount > 1) {
             if (!isLastRowComplete && lastRow) parseData(lastRow + firstRow)
             else if (isLastRowComplete) parseData(firstRow)
@@ -73,11 +72,20 @@ export default async function seedFdcFood() {
         descSet = new Set()
         fdcIdSet = new Set()
         dupFood = []
+        errors = []
 
-        throw new Error('stop')
+        if (chunkCount === 567) break
     }
 
-    console.log('Finished reading the file.')
+    try {
+        await dbClient.transaction().execute(async (trx) => await syncRecords(trx))
+        await client.closeConnection()
+
+        console.log('Finished reading the file.')
+    } catch (error) {
+        await client.closeConnection()
+        console.error(error)
+    }
 }
 
 const parseData = (row: string) => {
@@ -85,21 +93,23 @@ const parseData = (row: string) => {
     const fdc_id = values[0] ? Number(values[0].slice(1)) : undefined
     const description = values[2] ? values[2].slice(1).trim().toLowerCase() : undefined
 
-    if (!fdc_id || !description)
+    if (!fdc_id || !description) {
         errors.push({ fdc_id, description, reason: 'Empty fdc_id or description' })
-
-    if (fdc_id && description) {
-        const dupDesc = descSet.has(description)
-        const dupFdc = fdcIdSet.has(fdc_id)
-
-        if (!dupDesc && !dupFdc) {
-            descSet.add(description)
-            fdcIdSet.add(fdc_id)
-            results.push({ fdc_id, description })
-        } else if (dupDesc && dupFdc) dupFood.push({ description, fdc_id, type: 3 })
-        else if (dupDesc) dupFood.push({ description, fdc_id, type: 2 })
-        else if (dupFdc) dupFood.push({ description, fdc_id, type: 1 })
+        return
     }
+
+    if (description.length > 500) return
+
+    const dupDesc = descSet.has(description)
+    const dupFdc = fdcIdSet.has(fdc_id)
+
+    if (!dupDesc && !dupFdc) {
+        descSet.add(description)
+        fdcIdSet.add(fdc_id)
+        results.push({ fdc_id, description })
+    } else if (dupDesc && dupFdc) dupFood.push({ description, fdc_id, type: 3 })
+    else if (dupDesc) dupFood.push({ description, fdc_id, type: 2 })
+    else if (dupFdc) dupFood.push({ description, fdc_id, type: 1 })
 }
 
 const insertToDb = async (
@@ -139,7 +149,7 @@ const insertToDb = async (
         const dupDesc = dbDuplicateDesc.has(item.description)
         const dupFdc = dbDuplicateFdc.has(item.fdc_id)
 
-        if (!(dupDesc && dupFdc))
+        if (!(dupDesc || dupFdc))
             insertData.push({ fdc_id: item.fdc_id, description: item.description })
         if (dupDesc && dupFdc)
             dupFood.push({ type: 3, fdc_id: item.fdc_id, description: item.description })
@@ -149,8 +159,8 @@ const insertToDb = async (
             dupFood.push({ type: 1, fdc_id: item.fdc_id, description: item.description })
     }
 
-    await trx.insertInto('Food').values(food).execute()
-    await syncRecords(trx)
+    if (!insertData?.length) return
+    await trx.insertInto('Food').values(insertData).execute()
     console.log('--------insertion done--------------')
 }
 
@@ -225,6 +235,7 @@ const syncRecords = async (trx: Transaction<DB>) => {
 
 const writeErrors = (errors: unknown[] | string, chunkCount: number) => {
     try {
+        if (!errors.length) return
         errors = '\n' + JSON.stringify(errors)
         fs.appendFileSync(errorFilePath, errors)
     } catch (error) {
