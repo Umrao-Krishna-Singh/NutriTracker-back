@@ -34,13 +34,14 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @db.UnsignedInt() @default(autoincrement()) 
+  id Int @id @db.UnsignedInt() @default(autoincrement()) 
   /// @zod.string.max(80)
   username String @db.VarChar(80) @unique
   /// @zod.string.max(126)
   fullname  String @db.VarChar(126)
   /// @zod.string.max(256)
   email String?  @db.VarChar(256) @unique
+  status Boolean @default(true)
 }
 
 model Food {
