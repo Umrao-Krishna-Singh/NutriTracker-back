@@ -6,4 +6,4 @@ import { NutritionService } from './nutrition.service'
     controllers: [NutritionController],
     providers: [NutritionService],
 })
-export class SearchModule {}
+export class NutritionModule {}
