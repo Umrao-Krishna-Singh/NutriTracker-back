@@ -9,6 +9,7 @@ export const UserSchema = z.object({
   username: z.string().max(80),
   fullname: z.string().max(126),
   email: z.string().max(256).nullable(),
+  status: z.boolean(),
 })
 
 export type User = z.infer<typeof UserSchema>
@@ -19,6 +20,7 @@ export type User = z.infer<typeof UserSchema>
 
 export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
   id: z.number().int().optional(),
+  status: z.boolean().optional(),
 }))
 
 export type UserOptionalDefaults = z.infer<typeof UserOptionalDefaultsSchema>

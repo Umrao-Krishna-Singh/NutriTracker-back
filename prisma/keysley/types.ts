@@ -63,6 +63,7 @@ export type User = {
      * @zod.string.max(256)
      */
     email: string | null;
+    status: Generated<number>;
 };
 export type DB = {
     DuplicateFood: DuplicateFood;
