@@ -3,13 +3,13 @@ import { DatabaseService, DatabaseType } from '@src/database/db.service'
 import { FoodSearchResponseDto } from './nutrition.dto'
 
 @Injectable()
-export class SearchService {
+export class NutritionService {
     private db: DatabaseType
     private readonly logger: Logger
 
     constructor(@Inject(DatabaseService) database: DatabaseService) {
         this.db = database.db()
-        this.logger = new Logger(SearchService.name)
+        this.logger = new Logger(NutritionService.name)
     }
 
     async getFoodDetails(search: string): Promise<FoodSearchResponseDto[]> {

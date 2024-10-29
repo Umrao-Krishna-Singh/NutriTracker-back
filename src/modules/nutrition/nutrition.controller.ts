@@ -1,19 +1,19 @@
 import { Get, UsePipes, Query, Logger } from '@nestjs/common'
-import { SearchService } from './nutrition.service'
+import { NutritionService } from './nutrition.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
 import { FoodSearchDto, FoodSearchResponseDto } from './nutrition.dto'
 import { GetFoodSearchValidationPipe } from './nutrition.pipe'
 
 @ApiController('nutrition')
-export class SearchController {
+export class NutritionController {
     private readonly logger: Logger
 
-    constructor(private readonly searchService: SearchService) {
-        this.logger = new Logger(SearchController.name)
+    constructor(private readonly searchService: NutritionService) {
+        this.logger = new Logger(NutritionController.name)
     }
 
     @Get('/food-details')
-    @UsePipes(new GetFoodSearchValidationPipe())
+    @UsePipes(GetFoodSearchValidationPipe)
     async getFoodDetails(
         @Query() foodSearchDto: FoodSearchDto,
     ): Promise<FoodSearchResponseDto[]> {
