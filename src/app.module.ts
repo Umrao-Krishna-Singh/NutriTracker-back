@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { HealthCheckModule } from '@src/modules/healthcheck/healthcheck.module'
-import { SearchModule } from '@src/modules/nutrition/nutrition.module'
+import { NutritionModule } from '@src/modules/nutrition/nutrition.module'
+import { ProfileModule } from './modules/profile/profile.module'
 import { DatabaseModule } from '@src/database/db.module'
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
@@ -69,7 +70,8 @@ const debugFilter = winston.format((info, opts) => {
         }),
         DatabaseModule,
         HealthCheckModule,
-        SearchModule,
+        NutritionModule,
+        ProfileModule,
     ],
     providers: [
         { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
