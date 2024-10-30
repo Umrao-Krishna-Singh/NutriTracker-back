@@ -29,7 +29,7 @@ export type FoodNutrition = {
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
-export type FoodTags = {
+export type FoodTag = {
     id: Generated<number>;
     food_id: number;
     tag_id: number;
@@ -55,6 +55,9 @@ export type User = {
      * @zod.string.max(80)
      */
     username: string;
+    /**
+     * @zod.string.max(100)
+     */
     hash_password: string;
     /**
      * @zod.string.max(126)
@@ -67,12 +70,36 @@ export type User = {
     is_verified: Generated<number>;
     status: Generated<number>;
 };
+export type UserAuthToken = {
+    id: Generated<number>;
+    user_id: number;
+    /**
+     * @zod.string.max(500)
+     */
+    token: string;
+    issued_at: Timestamp;
+    expire_at: Timestamp;
+    created_at: Generated<Timestamp>;
+};
+export type UserRefreshToken = {
+    id: Generated<number>;
+    user_id: number;
+    /**
+     * @zod.string.max(500)
+     */
+    token: string;
+    issued_at: Timestamp;
+    expire_at: Timestamp;
+    created_at: Generated<Timestamp>;
+};
 export type DB = {
     DuplicateFood: DuplicateFood;
     Food: Food;
     FoodNutrition: FoodNutrition;
-    FoodTags: FoodTags;
+    FoodTag: FoodTag;
     Nutrition: Nutrition;
     Tag: Tag;
     User: User;
+    UserAuthToken: UserAuthToken;
+    UserRefreshToken: UserRefreshToken;
 };

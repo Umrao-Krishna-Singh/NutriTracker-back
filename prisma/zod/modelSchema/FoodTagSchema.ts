@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 /////////////////////////////////////////
-// FOOD TAGS SCHEMA
+// FOOD TAG SCHEMA
 /////////////////////////////////////////
 
-export const FoodTagsSchema = z.object({
+export const FoodTagSchema = z.object({
   id: z.number().int(),
   food_id: z.number().int(),
   tag_id: z.number().int(),
@@ -12,18 +12,18 @@ export const FoodTagsSchema = z.object({
   updated_at: z.coerce.date(),
 })
 
-export type FoodTags = z.infer<typeof FoodTagsSchema>
+export type FoodTag = z.infer<typeof FoodTagSchema>
 
 /////////////////////////////////////////
-// FOOD TAGS OPTIONAL DEFAULTS SCHEMA
+// FOOD TAG OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const FoodTagsOptionalDefaultsSchema = FoodTagsSchema.merge(z.object({
+export const FoodTagOptionalDefaultsSchema = FoodTagSchema.merge(z.object({
   id: z.number().int().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))
 
-export type FoodTagsOptionalDefaults = z.infer<typeof FoodTagsOptionalDefaultsSchema>
+export type FoodTagOptionalDefaults = z.infer<typeof FoodTagOptionalDefaultsSchema>
 
-export default FoodTagsSchema;
+export default FoodTagSchema;
