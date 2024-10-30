@@ -55,6 +55,7 @@ export type User = {
      * @zod.string.max(80)
      */
     username: string;
+    hash_password: string;
     /**
      * @zod.string.max(126)
      */
@@ -62,7 +63,8 @@ export type User = {
     /**
      * @zod.string.max(256)
      */
-    email: string | null;
+    email: string;
+    is_verified: Generated<number>;
     status: Generated<number>;
 };
 export type DB = {

@@ -7,8 +7,10 @@ import { z } from 'zod';
 export const UserSchema = z.object({
   id: z.number().int(),
   username: z.string().max(80),
+  hash_password: z.string(),
   fullname: z.string().max(126),
-  email: z.string().max(256).nullable(),
+  email: z.string().max(256),
+  is_verified: z.boolean(),
   status: z.boolean(),
 })
 
@@ -20,6 +22,7 @@ export type User = z.infer<typeof UserSchema>
 
 export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
   id: z.number().int().optional(),
+  is_verified: z.boolean().optional(),
   status: z.boolean().optional(),
 }))
 
