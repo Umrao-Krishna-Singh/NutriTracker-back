@@ -37,10 +37,12 @@ model User {
   id Int @id @db.UnsignedInt() @default(autoincrement()) 
   /// @zod.string.max(80)
   username String @db.VarChar(80) @unique
+  hash_password String @db.VarChar(100)
   /// @zod.string.max(126)
   fullname  String @db.VarChar(126)
   /// @zod.string.max(256)
-  email String?  @db.VarChar(256) @unique
+  email String  @db.VarChar(256) @unique
+  is_verified Boolean @default(false)
   status Boolean @default(true)
 }
 
