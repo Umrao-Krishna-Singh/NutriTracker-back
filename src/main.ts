@@ -24,23 +24,27 @@ async function bootstrap() {
         credentials: true,
     })
 
-    const config = new DocumentBuilder()
-        .setTitle('NutriTracker Apis')
-        .setDescription('Apis to interact with Nutritracker Backend')
-        .setVersion('1.0')
-        .addTag('Version 1.0')
-        .build()
-    const documentFactory = () => SwaggerModule.createDocument(app, config)
-    SwaggerModule.setup('api', app, documentFactory)
-
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))
     app.useGlobalGuards(new SpiderGuard())
-    if (isDev) app.useGlobalInterceptors(new RequestLoggingInterceptor())
+
+    const swaggerEndpoint = 'documentation'
+    if (isDev) {
+        app.useGlobalInterceptors(new RequestLoggingInterceptor())
+        const config = new DocumentBuilder()
+            .setTitle('NutriTracker Apis')
+            .setDescription('Apis to interact with Nutritracker Backend')
+            .setVersion('1.0')
+            .addTag('APIs')
+            .build()
+        const documentFactory = () => SwaggerModule.createDocument(app, config)
+        SwaggerModule.setup(swaggerEndpoint, app, documentFactory)
+    }
 
     await app.listen(ENV.API_PORT, ENV.API_HOST, async () => {
         const url = await app.getUrl()
         console.log(`Server listening on: ${url}`)
         console.log(`Healthcheck route on: ${url}/api/v1/test`)
+        if (isDev) console.log(`Swagger route : ${url}/${swaggerEndpoint}`)
     })
 }
 
