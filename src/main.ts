@@ -6,6 +6,7 @@ import { RequestLoggingInterceptor } from '@src/common/interceptors/req-logging.
 import * as bootstrapConfig from '@src/app.bootstrap.config'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { isDev, ENV } from './app.config'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 async function bootstrap() {
     const app = await NestFactory.create<NestFastifyApplication>(
@@ -22,6 +23,15 @@ async function bootstrap() {
 
         credentials: true,
     })
+
+    const config = new DocumentBuilder()
+        .setTitle('NutriTracker Apis')
+        .setDescription('Apis to interact with Nutritracker Backend')
+        .setVersion('1.0')
+        .addTag('Version 1.0')
+        .build()
+    const documentFactory = () => SwaggerModule.createDocument(app, config)
+    SwaggerModule.setup('api', app, documentFactory)
 
     app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))
     app.useGlobalGuards(new SpiderGuard())
