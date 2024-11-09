@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 
-export class Healthcheck {
+export class HealthCheckDto {
     @ApiProperty({ example: 200, description: 'Status code of response' })
     statusCode!: number
     @ApiProperty({ example: 'Success', description: 'Response message from the API' })

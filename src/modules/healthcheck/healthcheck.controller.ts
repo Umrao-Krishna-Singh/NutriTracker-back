@@ -1,20 +1,16 @@
 import { Get, Logger } from '@nestjs/common'
 import { HealthCheckService } from './healthcheck.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
-import { ApiOkResponse } from '@nestjs/swagger'
-import { Healthcheck } from './healthcheck.entity'
-import { ApiUnsuccessfulResponse } from '@src/common/decorators/swagger.decorator'
+import { HealthCheckDto } from './healthcheck.dto'
+import { ApiGeneralResponse } from '@src/common/decorators/swagger.decorator'
 
 @ApiController()
 export class HealthCheckController {
-    private readonly logger: Logger
-    constructor(private readonly healthCheckService: HealthCheckService) {
-        this.logger = new Logger(HealthCheckController.name)
-    }
+    private readonly logger = new Logger(HealthCheckController.name)
+    constructor(private readonly healthCheckService: HealthCheckService) {}
 
-    @ApiUnsuccessfulResponse()
-    @ApiOkResponse({ type: Healthcheck })
     @Get('/test')
+    @ApiGeneralResponse({ type: HealthCheckDto })
     async getHello(): Promise<'Success from backend!'> {
         this.logger.log('request received')
 
