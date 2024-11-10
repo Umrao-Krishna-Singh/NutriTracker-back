@@ -1,17 +1,13 @@
 import { PipeTransform, Logger } from '@nestjs/common'
 import { ZodValidationException } from '@src/common/exceptions/zod-validation.exception'
-import { getFoodDetailsSearchSchema } from './nutrition.dto'
+import { getFoodListSchema } from './nutrition.dto'
 
-export class GetFoodSearchValidationPipe implements PipeTransform {
-    private readonly getFoodDetailsSearchSchema = getFoodDetailsSearchSchema
-    public logger: Logger = new Logger(GetFoodSearchValidationPipe.name)
+export class GetFoodListValidationPipe implements PipeTransform {
+    private readonly getFoodListSchema = getFoodListSchema
+    public logger: Logger = new Logger(GetFoodListValidationPipe.name)
 
     transform(value: unknown) {
-        const {
-            success,
-            data,
-            error: zodError,
-        } = this.getFoodDetailsSearchSchema.safeParse(value)
+        const { success, data, error: zodError } = this.getFoodListSchema.safeParse(value)
 
         this.logger.debug('identifier', value)
 
