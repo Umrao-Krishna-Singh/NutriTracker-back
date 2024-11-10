@@ -60,9 +60,8 @@ export function ApiUnsuccessfulResponse() {
     )
 }
 
-export function ApiGeneralResponse(options?: ApiResponseNoStatusOptions) {
-    if (!options) options = { description: 'Success' }
-    else if (!options.description) options.description = 'Success'
+export function ApiGeneralResponse(options: ApiResponseNoStatusOptions) {
+    if (!options.description) options.description = 'Success'
 
     return applyDecorators(
         ApiOkResponse(options),
