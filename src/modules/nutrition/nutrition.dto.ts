@@ -19,8 +19,10 @@ export class GetFoodItemResDto {
 export class GetFoodListResDto extends SuccessDto {
     @ApiProperty({
         type: [GetFoodItemResDto],
-        example: [{ id: 20, description: 'Milk' }],
-        description: 'List of food items that match the search',
+        example: [{ id: 20, description: 'milk' }],
+        nullable: true,
+        description:
+            'List of food items that match the search. Returns null when no search matches found.',
     })
-    data!: GetFoodItemResDto[]
+    data!: GetFoodItemResDto | null
 }
