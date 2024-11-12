@@ -13,7 +13,6 @@ import {
     APP_FILTER,
     // APP_GUARD,
     APP_INTERCEPTOR,
-    // APP_PIPE,
     // HttpAdapterHost,
 } from '@nestjs/core'
 // import { ThrottlerGuard } from '@nestjs/throttler'
