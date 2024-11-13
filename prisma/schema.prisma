@@ -106,10 +106,28 @@ model DuplicateFood {
   updated_at DateTime @default(now()) 
 }
 
+enum Units {
+  G
+  IU
+  KCAL
+  MCG_RE
+  MG
+  MG_ATE
+  MG_GAE
+  PH
+  SP_GR
+  UG
+  UMOL_TE
+  kJ
+}
+
 model Nutrition {
   id Int @id @db.UnsignedInt() @default(autoincrement())
-  name String @db.VarChar(200) @unique
   fdc_nutrient_id Int? @db.UnsignedInt() @unique
+  name String @db.VarChar(200) @unique
+  unit_name Units?
+  nutrient_nbr Int? @db.UnsignedMediumInt() @unique
+  rank Int? @db.UnsignedMediumInt()
   food_nutrition FoodNutrition[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
