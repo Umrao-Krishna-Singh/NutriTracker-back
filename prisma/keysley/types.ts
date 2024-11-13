@@ -14,11 +14,11 @@ export type DuplicateFood = {
 };
 export type Food = {
     id: Generated<number>;
+    fdc_id: number | null;
     /**
      * @zod.string.max(500)
      */
     description: string;
-    fdc_id: number | null;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
