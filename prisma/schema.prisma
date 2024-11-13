@@ -86,7 +86,7 @@ model Food {
   fdc_id Int? @db.UnsignedInt() @unique
   /// @zod.string.max(500)
   description String @db.VarChar(500) @unique
-  food_nutrition FoodNutrition[]
+  food_nutrition FoodNutrient[]
   food_tags FoodTag[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
@@ -121,23 +121,23 @@ enum Units {
   kJ
 }
 
-model Nutrition {
+model Nutrient {
   id Int @id @db.UnsignedInt() @default(autoincrement())
-  fdc_nutrient_id Int? @db.UnsignedInt() @unique
+  fdc_nutrient_id Int @db.UnsignedInt() @unique
   name String @db.VarChar(200) @unique
   unit_name Units?
   nutrient_nbr Int? @db.UnsignedMediumInt() @unique
   rank Int? @db.UnsignedMediumInt()
-  food_nutrition FoodNutrition[]
+  food_nutrient FoodNutrient[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
 }
 
-model FoodNutrition {
+model FoodNutrient {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
   food_id Int @db.UnsignedInt()
-  nutrition Nutrition @relation(fields: [nutrition_id], references: [id])
+  nutrition Nutrient @relation(fields: [nutrition_id], references: [id])
   nutrition_id Int @db.UnsignedInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 

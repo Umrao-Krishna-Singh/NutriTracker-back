@@ -4,8 +4,8 @@ export { UserAuthTokenScalarFieldEnumSchema } from './UserAuthTokenScalarFieldEn
 export { UserRefreshTokenScalarFieldEnumSchema } from './UserRefreshTokenScalarFieldEnumSchema';
 export { FoodScalarFieldEnumSchema } from './FoodScalarFieldEnumSchema';
 export { DuplicateFoodScalarFieldEnumSchema } from './DuplicateFoodScalarFieldEnumSchema';
-export { NutritionScalarFieldEnumSchema } from './NutritionScalarFieldEnumSchema';
-export { FoodNutritionScalarFieldEnumSchema } from './FoodNutritionScalarFieldEnumSchema';
+export { NutrientScalarFieldEnumSchema } from './NutrientScalarFieldEnumSchema';
+export { FoodNutrientScalarFieldEnumSchema } from './FoodNutrientScalarFieldEnumSchema';
 export { TagScalarFieldEnumSchema } from './TagScalarFieldEnumSchema';
 export { FoodTagScalarFieldEnumSchema } from './FoodTagScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';

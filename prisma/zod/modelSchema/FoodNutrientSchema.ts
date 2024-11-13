@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
 /////////////////////////////////////////
-// FOOD NUTRITION SCHEMA
+// FOOD NUTRIENT SCHEMA
 /////////////////////////////////////////
 
-export const FoodNutritionSchema = z.object({
+export const FoodNutrientSchema = z.object({
   id: z.number().int(),
   food_id: z.number().int(),
   nutrition_id: z.number().int(),
@@ -12,18 +12,18 @@ export const FoodNutritionSchema = z.object({
   updated_at: z.coerce.date(),
 })
 
-export type FoodNutrition = z.infer<typeof FoodNutritionSchema>
+export type FoodNutrient = z.infer<typeof FoodNutrientSchema>
 
 /////////////////////////////////////////
-// FOOD NUTRITION OPTIONAL DEFAULTS SCHEMA
+// FOOD NUTRIENT OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const FoodNutritionOptionalDefaultsSchema = FoodNutritionSchema.merge(z.object({
+export const FoodNutrientOptionalDefaultsSchema = FoodNutrientSchema.merge(z.object({
   id: z.number().int().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))
 
-export type FoodNutritionOptionalDefaults = z.infer<typeof FoodNutritionOptionalDefaultsSchema>
+export type FoodNutrientOptionalDefaults = z.infer<typeof FoodNutrientOptionalDefaultsSchema>
 
-export default FoodNutritionSchema;
+export default FoodNutrientSchema;

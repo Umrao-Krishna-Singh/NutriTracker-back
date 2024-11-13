@@ -24,7 +24,7 @@ export type Food = {
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
-export type FoodNutrition = {
+export type FoodNutrient = {
     id: Generated<number>;
     food_id: number;
     nutrition_id: number;
@@ -38,9 +38,9 @@ export type FoodTag = {
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
-export type Nutrition = {
+export type Nutrient = {
     id: Generated<number>;
-    fdc_nutrient_id: number | null;
+    fdc_nutrient_id: number;
     name: string;
     unit_name: Units | null;
     nutrient_nbr: number | null;
@@ -103,9 +103,9 @@ export type UserRefreshToken = {
 export type DB = {
     DuplicateFood: DuplicateFood;
     Food: Food;
-    FoodNutrition: FoodNutrition;
+    FoodNutrient: FoodNutrient;
     FoodTag: FoodTag;
-    Nutrition: Nutrition;
+    Nutrient: Nutrient;
     Tag: Tag;
     User: User;
     UserAuthToken: UserAuthToken;

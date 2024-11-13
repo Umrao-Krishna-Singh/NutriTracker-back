@@ -2,13 +2,13 @@ import { z } from 'zod';
 import { UnitsSchema } from '../inputTypeSchemas/UnitsSchema'
 
 /////////////////////////////////////////
-// NUTRITION SCHEMA
+// NUTRIENT SCHEMA
 /////////////////////////////////////////
 
-export const NutritionSchema = z.object({
+export const NutrientSchema = z.object({
   unit_name: UnitsSchema.nullable(),
   id: z.number().int(),
-  fdc_nutrient_id: z.number().int().nullable(),
+  fdc_nutrient_id: z.number().int(),
   name: z.string(),
   nutrient_nbr: z.number().int().nullable(),
   rank: z.number().int().nullable(),
@@ -16,18 +16,18 @@ export const NutritionSchema = z.object({
   updated_at: z.coerce.date(),
 })
 
-export type Nutrition = z.infer<typeof NutritionSchema>
+export type Nutrient = z.infer<typeof NutrientSchema>
 
 /////////////////////////////////////////
-// NUTRITION OPTIONAL DEFAULTS SCHEMA
+// NUTRIENT OPTIONAL DEFAULTS SCHEMA
 /////////////////////////////////////////
 
-export const NutritionOptionalDefaultsSchema = NutritionSchema.merge(z.object({
+export const NutrientOptionalDefaultsSchema = NutrientSchema.merge(z.object({
   id: z.number().int().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))
 
-export type NutritionOptionalDefaults = z.infer<typeof NutritionOptionalDefaultsSchema>
+export type NutrientOptionalDefaults = z.infer<typeof NutrientOptionalDefaultsSchema>
 
-export default NutritionSchema;
+export default NutrientSchema;
