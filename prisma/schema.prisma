@@ -83,9 +83,9 @@ model UserRefreshToken {
 
 model Food {
   id Int @id @db.UnsignedInt() @default(autoincrement())
+  fdc_id Int? @db.UnsignedInt() @unique
   /// @zod.string.max(500)
   description String @db.VarChar(500) @unique
-  fdc_id Int? @db.UnsignedInt() @unique
   food_nutrition FoodNutrition[]
   food_tags FoodTag[]
   created_at DateTime @default(now())
