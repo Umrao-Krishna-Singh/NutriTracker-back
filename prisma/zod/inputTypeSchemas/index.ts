@@ -10,3 +10,4 @@ export { TagScalarFieldEnumSchema } from './TagScalarFieldEnumSchema';
 export { FoodTagScalarFieldEnumSchema } from './FoodTagScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
+export { UnitsSchema } from './UnitsSchema';

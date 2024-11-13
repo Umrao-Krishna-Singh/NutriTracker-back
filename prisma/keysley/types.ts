@@ -4,6 +4,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
+import type { Units } from "./enums";
+
 export type DuplicateFood = {
     id: Generated<number>;
     description: string;
@@ -38,8 +40,11 @@ export type FoodTag = {
 };
 export type Nutrition = {
     id: Generated<number>;
-    name: string;
     fdc_nutrient_id: number | null;
+    name: string;
+    unit_name: Units | null;
+    nutrient_nbr: number | null;
+    rank: number | null;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
