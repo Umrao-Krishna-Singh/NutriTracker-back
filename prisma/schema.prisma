@@ -38,12 +38,16 @@ model User {
   /// @zod.string.max(80)
   username String @db.VarChar(80) @unique
   /// @zod.string.max(100)
-  hash_password String @db.VarChar(100)
+  password_hash String @db.VarChar(100)
   /// @zod.string.max(126)
   fullname  String @db.VarChar(126)
   /// @zod.string.max(256)
   email String  @db.VarChar(256) @unique
   is_verified Boolean @default(false)
+  //weight in grams and height in mm
+  weight Int? @db.UnsignedMediumInt()
+  goal_weight Int? @db.UnsignedMediumInt()
+  height Int? @db.UnsignedSmallInt()
   status Boolean @default(true)
   user_auth_token UserAuthToken[]
   user_refresh_token UserRefreshToken[]
@@ -71,6 +75,11 @@ model UserRefreshToken {
   created_at DateTime @default(now())
 }
 
+
+// model UserSearch - user id, search term - suggestion selected: boolean, if selected - selection id.
+// if not selected - full search page -> search chosen from list
+
+// model CustomFood - user id, food description. 
 
 model Food {
   id Int @id @db.UnsignedInt() @default(autoincrement())

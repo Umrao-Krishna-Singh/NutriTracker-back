@@ -58,7 +58,7 @@ export type User = {
     /**
      * @zod.string.max(100)
      */
-    hash_password: string;
+    password_hash: string;
     /**
      * @zod.string.max(126)
      */
@@ -68,6 +68,9 @@ export type User = {
      */
     email: string;
     is_verified: Generated<number>;
+    weight: number | null;
+    goal_weight: number | null;
+    height: number | null;
     status: Generated<number>;
 };
 export type UserAuthToken = {
