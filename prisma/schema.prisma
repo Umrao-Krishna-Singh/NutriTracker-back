@@ -124,7 +124,7 @@ enum Units {
 model Nutrient {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   fdc_nutrient_id Int @db.UnsignedInt() @unique
-  name String @db.VarChar(200) @unique
+  name String @db.VarChar(200)
   unit_name Units?
   nutrient_nbr Int? @db.UnsignedMediumInt() @unique
   rank Int? @db.UnsignedMediumInt()
