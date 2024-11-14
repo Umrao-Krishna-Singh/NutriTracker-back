@@ -68,20 +68,23 @@ CREATE TABLE `DuplicateFood` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Nutrition` (
+CREATE TABLE `Nutrient` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `fdc_nutrient_id` INTEGER UNSIGNED NOT NULL,
     `name` VARCHAR(200) NOT NULL,
-    `fdc_nutrient_id` INTEGER UNSIGNED NULL,
+    `unit_name` ENUM('G', 'IU', 'KCAL', 'MCG_RE', 'MG', 'MG_ATE', 'MG_GAE', 'PH', 'SP_GR', 'UG', 'UMOL_TE', 'kJ') NULL,
+    `nutrient_nbr` MEDIUMINT UNSIGNED NULL,
+    `rank` MEDIUMINT UNSIGNED NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `Nutrition_name_key`(`name`),
-    UNIQUE INDEX `Nutrition_fdc_nutrient_id_key`(`fdc_nutrient_id`),
+    UNIQUE INDEX `Nutrient_fdc_nutrient_id_key`(`fdc_nutrient_id`),
+    UNIQUE INDEX `Nutrient_nutrient_nbr_key`(`nutrient_nbr`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `FoodNutrition` (
+CREATE TABLE `FoodNutrient` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `food_id` INTEGER UNSIGNED NOT NULL,
     `nutrition_id` INTEGER UNSIGNED NOT NULL,
@@ -120,10 +123,10 @@ ALTER TABLE `UserAuthToken` ADD CONSTRAINT `UserAuthToken_user_id_fkey` FOREIGN 
 ALTER TABLE `UserRefreshToken` ADD CONSTRAINT `UserRefreshToken_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `FoodNutrition` ADD CONSTRAINT `FoodNutrition_food_id_fkey` FOREIGN KEY (`food_id`) REFERENCES `Food`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `FoodNutrient` ADD CONSTRAINT `FoodNutrient_food_id_fkey` FOREIGN KEY (`food_id`) REFERENCES `Food`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `FoodNutrition` ADD CONSTRAINT `FoodNutrition_nutrition_id_fkey` FOREIGN KEY (`nutrition_id`) REFERENCES `Nutrition`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `FoodNutrient` ADD CONSTRAINT `FoodNutrient_nutrition_id_fkey` FOREIGN KEY (`nutrition_id`) REFERENCES `Nutrient`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `FoodTag` ADD CONSTRAINT `FoodTag_food_id_fkey` FOREIGN KEY (`food_id`) REFERENCES `Food`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
