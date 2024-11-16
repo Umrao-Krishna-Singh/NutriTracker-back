@@ -9,7 +9,7 @@ import type { Units } from "./enums";
 export type DuplicateFood = {
     id: Generated<number>;
     description: string;
-    fdc_id: number;
+    fdc_id: number | null;
     type: number;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
@@ -27,7 +27,8 @@ export type Food = {
 export type FoodNutrient = {
     id: Generated<number>;
     food_id: number;
-    nutrition_id: number;
+    nutrient_id: number;
+    quantity: number;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
