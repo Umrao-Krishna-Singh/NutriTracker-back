@@ -19,25 +19,35 @@ let errors: unknown[] = []
 let chunkCount = 0
 let results: foodItems[] = []
 const filePath = './prisma/data/zipped/food.csv'
-const errorFilePath = './prisma/seeders/seed_errors.txt'
+const errorDir = './storage/seeders/'
+const errorFilePath = errorDir + 'food_seed_errors.txt'
 let descSet: Set<string> = new Set()
 let fdcIdSet: Set<number> = new Set()
 let dupFood: dupFoodItems[] = []
 
-if (!fs.existsSync(errorFilePath)) fs.writeFileSync(errorFilePath, '')
+if (!fs.existsSync(errorDir)) {
+    fs.mkdirSync(errorDir)
+    fs.writeFileSync(errorFilePath, '')
+}
+
+if (!fs.existsSync(filePath)) throw new Error(`${filePath} not found: unzip data first`)
 
 export default async function seedFdcFood() {
-    if (!fs.existsSync(filePath)) throw new Error(`file: ${filePath} does not exist`)
     console.log('-------- seeding food.csv in database --------')
 
     const dbClient = await client.db()
     let lastRow: string | undefined
     let isLastRowComplete = true
 
+    // seeding data from csv file chunk by chunk instead of reading whole file cause it is a big file.
     for await (const chunk of fs.createReadStream(filePath) as AsyncIterable<Buffer>) {
         chunkCount++
+        //splitting the data by new lines gives data in rows
         const chunkData: string[] = chunk.toString().split('\n')
         const firstRow: string = chunkData[0]
+
+        // when chunks change, last row data from last file might have been incomplete and hence it would not be
+        // seeded. It is being checked and inserted here if possible.
         if (chunkCount > 1) {
             if (!isLastRowComplete && lastRow) parseData(lastRow + firstRow)
             else if (isLastRowComplete) parseData(firstRow)
@@ -47,6 +57,7 @@ export default async function seedFdcFood() {
         if (lastRow.split(',').length !== 5) isLastRowComplete = false
 
         for (let i = 1; i < chunkData.length - 1; i++) {
+            //parsing rows and pushing them to the correct data set so that they can be inserted in next step
             parseData(chunkData[i])
         }
 
@@ -58,6 +69,8 @@ export default async function seedFdcFood() {
                         await insertToDb(trx, results, descSet, fdcIdSet, dupFood),
                 )
 
+            //inserting duplicates separately from actual data to ensure that all the data is actually seeded to
+            //the database, just in case it becomes useful in future for some reason.
             await dbClient
                 .transaction()
                 .execute(async (trx) => await insertDuplicates(trx, dupFood))
@@ -75,6 +88,8 @@ export default async function seedFdcFood() {
     }
 
     try {
+        //making sure that the 'type' of duplicate table is correct. Some inconsistency might have occurred due to data being in
+        //different chunks
         await dbClient.transaction().execute(async (trx) => await syncRecords(trx))
         await client.closeConnection()
 
