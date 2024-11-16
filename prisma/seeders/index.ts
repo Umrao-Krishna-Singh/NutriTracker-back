@@ -1,8 +1,10 @@
-// import fndds from './fndds_data'
-import seedFdcFood from './food'
+import seedNutrients from './nutrient'
+import seedFndds from './fndds'
+// import seedFdcFood from './food'
 async function seed() {
-    await seedFdcFood()
-    // await fndds()
+    await seedNutrients()
+    await seedFndds()
+    // await seedFdcFood()
 }
 
 seed()
