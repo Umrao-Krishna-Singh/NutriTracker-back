@@ -7,7 +7,8 @@ import { z } from 'zod';
 export const FoodNutrientSchema = z.object({
   id: z.number().int(),
   food_id: z.number().int(),
-  nutrition_id: z.number().int(),
+  nutrient_id: z.number().int(),
+  quantity: z.number().int(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })
