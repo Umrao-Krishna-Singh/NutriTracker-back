@@ -86,7 +86,7 @@ model Food {
   fdc_id Int? @db.UnsignedInt() @unique
   /// @zod.string.max(500)
   description String @db.VarChar(500) @unique
-  food_nutrition FoodNutrient[]
+  food_nutrient FoodNutrient[]
   food_tags FoodTag[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
@@ -100,7 +100,7 @@ model Food {
 model DuplicateFood {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   description String @db.VarChar(500) 
-  fdc_id Int @db.UnsignedInt() 
+  fdc_id Int? @db.UnsignedInt() 
   type Int @db.SmallInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
@@ -137,10 +137,13 @@ model FoodNutrient {
   id Int @id @db.UnsignedInt() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
   food_id Int @db.UnsignedInt()
-  nutrition Nutrient @relation(fields: [nutrition_id], references: [id])
-  nutrition_id Int @db.UnsignedInt()
+  nutrient Nutrient @relation(fields: [nutrient_id], references: [id])
+  nutrient_id Int @db.UnsignedInt()
+  //this will be multiplied by 1000 when saving
+  quantity Int @db.UnsignedInt() 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
+  @@unique([food_id,nutrient_id])
 }
 
 model Tag {
@@ -159,4 +162,5 @@ model FoodTag {
   tag_id Int @db.UnsignedInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
+  @@unique([food_id,tag_id])
 }
