@@ -16,7 +16,7 @@ if (!fs.existsSync(errorDir)) {
     fs.writeFileSync(errorFilePath, '')
 }
 
-if (!fs.existsSync(filePath)) throw new Error(`file: ${filePath} does not exist`)
+if (!fs.existsSync(filePath)) throw new Error(`${filePath} not found: unzip data first`)
 
 export default async function seedNutrient() {
     console.log('-------- seeding nutrient.csv in database --------')
