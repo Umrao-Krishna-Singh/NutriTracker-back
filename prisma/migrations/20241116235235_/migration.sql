@@ -59,7 +59,7 @@ CREATE TABLE `Food` (
 CREATE TABLE `DuplicateFood` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `description` VARCHAR(500) NOT NULL,
-    `fdc_id` INTEGER UNSIGNED NOT NULL,
+    `fdc_id` INTEGER UNSIGNED NULL,
     `type` SMALLINT NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -87,10 +87,12 @@ CREATE TABLE `Nutrient` (
 CREATE TABLE `FoodNutrient` (
     `id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `food_id` INTEGER UNSIGNED NOT NULL,
-    `nutrition_id` INTEGER UNSIGNED NOT NULL,
+    `nutrient_id` INTEGER UNSIGNED NOT NULL,
+    `quantity` INTEGER UNSIGNED NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `FoodNutrient_food_id_nutrient_id_key`(`food_id`, `nutrient_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -113,6 +115,7 @@ CREATE TABLE `FoodTag` (
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `FoodTag_food_id_tag_id_key`(`food_id`, `tag_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -126,7 +129,7 @@ ALTER TABLE `UserRefreshToken` ADD CONSTRAINT `UserRefreshToken_user_id_fkey` FO
 ALTER TABLE `FoodNutrient` ADD CONSTRAINT `FoodNutrient_food_id_fkey` FOREIGN KEY (`food_id`) REFERENCES `Food`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `FoodNutrient` ADD CONSTRAINT `FoodNutrient_nutrition_id_fkey` FOREIGN KEY (`nutrition_id`) REFERENCES `Nutrient`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `FoodNutrient` ADD CONSTRAINT `FoodNutrient_nutrient_id_fkey` FOREIGN KEY (`nutrient_id`) REFERENCES `Nutrient`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `FoodTag` ADD CONSTRAINT `FoodTag_food_id_fkey` FOREIGN KEY (`food_id`) REFERENCES `Food`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
