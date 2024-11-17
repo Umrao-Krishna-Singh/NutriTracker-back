@@ -1,14 +1,35 @@
 import { z } from 'zod'
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { SuccessDto } from '@src/constants/swagger.constant'
 
-export const getFoodListSchema = z.object({ search: z.string().min(1) }).required()
-export type FoodListQueryDto = z.infer<typeof getFoodListSchema>
-export class GetFoodListQueryDto {
+export const getFoodSuggestedListSchema = z
+    .object({ search: z.string().min(1) })
+    .required()
+
+const pgnReqScm = z.object({
+    page: z.number().int().min(1).default(1),
+    limit: z.number().int().min(1).default(10),
+})
+
+export const getFoodListFullSchema = pgnReqScm
+    .extend({ search: z.string().min(1) })
+    .required()
+export class GetFoodListSuggestQueryDto {
     @ApiProperty({ example: 'Milk', description: 'Food item name' })
     search!: string
 }
 
+class PgnReqDto {
+    @ApiPropertyOptional({ example: 1, description: 'Page number' })
+    page!: number
+    @ApiPropertyOptional({ example: 10, description: 'Number of items per page' })
+    limit!: number
+}
+
+export class GetFoodListFullQueryDto extends PgnReqDto {
+    @ApiProperty({ example: 'Milk', description: 'Food item name' })
+    search!: string
+}
 export class GetFoodItemResDto {
     @ApiProperty({ example: 20, description: 'ID of the food item' })
     id!: number
@@ -16,7 +37,7 @@ export class GetFoodItemResDto {
     description!: string
 }
 
-export class GetFoodListResDto extends SuccessDto {
+export class GetFoodListSuggestResDto extends SuccessDto {
     @ApiProperty({
         type: [GetFoodItemResDto],
         example: [{ id: 20, description: 'milk' }],
