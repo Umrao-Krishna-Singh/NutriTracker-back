@@ -20,9 +20,13 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
     intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
         return next.handle().pipe(
             map((data) => {
+                //data is an array and it is empty array
                 if (!data || (Array.isArray(data) && !data.length))
                     return { statusCode: 200, message: 'Success', data: null }
-                else return { statusCode: 200, message: 'Success', data }
+                //paginated results
+                else if (Object.keys(data).includes('page'))
+                    return { statusCode: 200, message: 'Success', ...data }
+                return { statusCode: 200, message: 'Success', data }
             }),
         )
     }
