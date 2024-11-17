@@ -13,3 +13,4 @@ storage
 /dist
 /build
 seed_errors.txt
+prisma/data/zipped
