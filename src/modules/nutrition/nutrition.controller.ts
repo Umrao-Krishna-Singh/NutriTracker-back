@@ -8,6 +8,7 @@ import {
     GetFoodListFullQueryDto,
     getFoodSuggestedListSchema,
     getFoodListFullSchema,
+    GetFoodListResDto,
 } from './nutrition.dto'
 import { ZodValidationPipe } from '@src/common/pipes/zod-input-validation.pipe'
 import { ApiGeneralResponse } from '@src/common/decorators/swagger.decorator'
@@ -27,11 +28,11 @@ export class NutritionController {
     }
 
     @Get('/food-list')
-    @ApiGeneralResponse({ type: GetFoodListSuggestResDto })
+    @ApiGeneralResponse({ type: GetFoodListResDto })
     async getFoodList(
         @Query(new ZodValidationPipe(getFoodListFullSchema))
         foodListDto: GetFoodListFullQueryDto,
-    ): Promise<GetFoodItemResDto[]> {
-        return await this.searchService.getFoodList(foodListDto.search)
+    ): Promise<GetFoodListResDto> {
+        return await this.searchService.getFoodList(foodListDto)
     }
 }
