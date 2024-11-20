@@ -1,16 +1,19 @@
-import { Injectable, Inject, Logger } from '@nestjs/common'
+import { Injectable, Inject } from '@nestjs/common'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
+import { ResHelperService } from '@src/response-helpers/res-help.service'
+import { HealthCheckDto } from './healthcheck.dto'
 
 @Injectable()
 export class HealthCheckService {
     private db: DatabaseType
-    private readonly logger: Logger
-    constructor(@Inject(DatabaseService) database: DatabaseService) {
+    constructor(
+        @Inject(DatabaseService) database: DatabaseService,
+        private readonly rhs: ResHelperService,
+    ) {
         this.db = database.db()
-        this.logger = new Logger(HealthCheckService.name)
     }
 
-    async getHello(): Promise<'Success from backend!'> {
+    async getHello(): Promise<HealthCheckDto> {
         //check if database can be reached
         await this.db
             .selectFrom('User')
@@ -18,6 +21,6 @@ export class HealthCheckService {
             .where('User.id', '=', 1)
             .execute()
 
-        return 'Success from backend!'
+        return this.rhs.success('Success from backend!')
     }
 }

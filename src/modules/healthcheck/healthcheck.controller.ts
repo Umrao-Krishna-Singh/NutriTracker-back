@@ -11,7 +11,7 @@ export class HealthCheckController {
 
     @Get('/test')
     @ApiGeneralResponse({ type: HealthCheckDto })
-    async getHello(): Promise<'Success from backend!'> {
+    async getHello(): Promise<HealthCheckDto> {
         this.logger.log('request received')
 
         return await this.healthCheckService.getHello()
