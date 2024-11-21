@@ -17,3 +17,10 @@ export class PaginateDto {
     @ApiProperty({ example: 5, description: 'Total number of pages' })
     pageCount!: number
 }
+
+export class PgReqDto {
+    @ApiProperty({ example: 1, description: 'Page number' })
+    page!: number
+    @ApiProperty({ example: 10, description: 'Number of items per page' })
+    limit!: number
+}
