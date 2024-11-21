@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { SuccessDto, PaginateDto } from '@src/utils/swagger.dtos.util'
+import { SuccessDto, PaginateDto } from '@src/utils/dtos/swagger.dtos.util'
 import { Units } from '@prism/keysley/enums'
 
 export const getFoodSuggestedListSchema = z
