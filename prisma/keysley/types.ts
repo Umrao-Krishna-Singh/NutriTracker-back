@@ -58,10 +58,6 @@ export type Tag = {
 export type User = {
     id: Generated<number>;
     /**
-     * @zod.string.max(80)
-     */
-    username: string;
-    /**
      * @zod.string.max(100)
      */
     pass_hash: string;

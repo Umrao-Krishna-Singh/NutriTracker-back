@@ -6,7 +6,6 @@ import { z } from 'zod';
 
 export const UserSchema = z.object({
   id: z.number().int(),
-  username: z.string().max(80),
   pass_hash: z.string().max(100),
   first_name: z.string().max(126),
   last_name: z.string().max(126),
