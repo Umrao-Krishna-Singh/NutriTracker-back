@@ -1,30 +1,44 @@
 import { Injectable, Inject, Logger } from '@nestjs/common'
 import { UserOptionalDefaults } from '@prism/zod'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
-import { UserResponseDto } from './profile.dto'
+import { EmailCheckResDto, EmailResEnum, SignupResponseDto } from './profile.dto'
+import { ResHelperService } from '@src/response-helpers/res-help.service'
 
 @Injectable()
 export class ProfileService {
     private db: DatabaseType
-    private readonly logger: Logger
-    constructor(@Inject(DatabaseService) database: DatabaseService) {
+    private readonly logger = new Logger(ProfileService.name)
+
+    constructor(
+        @Inject(DatabaseService) database: DatabaseService,
+        private readonly rhs: ResHelperService,
+    ) {
         this.db = database.db()
-        this.logger = new Logger(ProfileService.name)
     }
 
-    async getHello(): Promise<'Success from backend!'> {
-        //check if database can be reached
-        await this.db
+    async checkEmail(email: string): Promise<EmailCheckResDto> {
+        const user = await this.db
             .selectFrom('User')
-            .select('User.id')
-            .where('User.id', '=', 1)
-            .execute()
+            .select(['email', 'is_verified', 'status'])
+            .where('email', '=', email)
+            .where('status', '=', 1)
+            .executeTakeFirst()
 
-        return 'Success from backend!'
+        if (!user) {
+            //signup
+            return this.rhs.success(EmailResEnum.notFound)
+        } else if (!user.is_verified) {
+            //send otp email and ask for it
+            return this.rhs.success(EmailResEnum.unverified)
+        } else {
+            return this.rhs.success(EmailResEnum.found)
+        }
     }
 
-    async signup(usr: Omit<UserOptionalDefaults, 'status'>): Promise<UserResponseDto> {
-        let user: UserResponseDto | undefined
+    async signup(
+        usr: Omit<UserOptionalDefaults, 'status' | 'is_verified'>,
+    ): Promise<SignupResponseDto> {
+        let user: SignupResponseDto | undefined
         const { insertId } = (await this.db.insertInto('User').values(usr).execute())[0]
 
         if (insertId)

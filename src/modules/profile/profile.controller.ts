@@ -1,29 +1,21 @@
-import { Get, UsePipes, Logger, Body } from '@nestjs/common'
+import { Post, Logger, Body } from '@nestjs/common'
 import { ProfileService } from './profile.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
-import { SignupValPipe } from './profile.pipe'
-import { UserOptionalDefaults } from '@prism/zod'
-import { UserResponseDto } from './profile.dto'
+import { ZodValidationPipe } from '@src/common/pipes/zod-input-validation.pipe'
+import { EmailCheckBodyDto, EmailCheckResDto, emailCheckSchema } from './profile.dto'
+import { ApiOpenResponse } from '@src/common/decorators/swagger.decorator'
 
 @ApiController('profile')
 export class ProfileController {
-    private readonly logger: Logger
-    constructor(private readonly profileService: ProfileService) {
-        this.logger = new Logger(ProfileController.name)
-    }
+    private readonly logger = new Logger(ProfileController.name)
+    constructor(private readonly profileService: ProfileService) {}
 
-    @Get('/test')
-    async getHello(): Promise<'Success from backend!'> {
-        this.logger.log('request received')
-
-        return await this.profileService.getHello()
-    }
-
-    @Get('/signup')
-    @UsePipes(SignupValPipe)
-    async signup(@Body() user: UserOptionalDefaults): Promise<UserResponseDto> {
-        this.logger.log('request received')
-        const userInfo = await this.profileService.signup(user)
-        return userInfo
+    @Post('/check-email')
+    @ApiOpenResponse({ type: EmailCheckResDto })
+    async checkEmail(
+        @Body(new ZodValidationPipe(emailCheckSchema))
+        input: EmailCheckBodyDto,
+    ): Promise<EmailCheckResDto> {
+        return await this.profileService.checkEmail(input.email)
     }
 }

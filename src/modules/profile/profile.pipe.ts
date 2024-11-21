@@ -2,24 +2,27 @@ import { PipeTransform, Logger, HttpException, HttpStatus, Inject } from '@nestj
 import { ZodValidationException } from '@src/common/exceptions/zod-validation.exception'
 import { UserOptionalDefaultsSchema } from '@prism/zod'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
-import { UserResponseDto } from './profile.dto'
+import { SignupResponseDto } from './profile.dto'
 
 export class SignupValPipe implements PipeTransform {
-    private readonly signupSchema = UserOptionalDefaultsSchema
-    private readonly logger: Logger
+    private readonly signupSchema = UserOptionalDefaultsSchema.omit({
+        id: true,
+        status: true,
+        is_verified: true,
+    })
+    private readonly logger = new Logger(SignupValPipe.name)
     private db: DatabaseType
     constructor(@Inject(DatabaseService) database: DatabaseService) {
         this.db = database.db()
-        this.logger = new Logger(SignupValPipe.name)
     }
 
-    async transform(value: unknown): Promise<Omit<UserResponseDto, 'id'>> {
+    async transform(value: unknown): Promise<Omit<SignupResponseDto, 'id'>> {
         const { success, data, error: zodError } = this.signupSchema.safeParse(value)
         if (!success) throw new ZodValidationException(zodError)
 
         const userExists = await this.db
             .selectFrom('User')
-            .select('User.id')
+            .select(['id', 'username', 'fullname', 'email'])
             .where((eb) =>
                 eb.or([
                     eb('User.username', '=', data.username),
@@ -28,7 +31,8 @@ export class SignupValPipe implements PipeTransform {
             )
             .executeTakeFirst()
 
-        if (userExists) throw new HttpException('User Exists', HttpStatus.BAD_REQUEST)
+        if (userExists)
+            throw new HttpException('User exists! Please Login! ', HttpStatus.BAD_REQUEST)
 
         return data
     }
