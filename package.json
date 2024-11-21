@@ -22,7 +22,8 @@
         "seed": "npx tsx prisma/seeders/index.ts",
         "tlt": "npx tsx src/modules/translate/index.ts",
         "migrate": "npx prisma migrate dev",
-        "schema": "npx primsa generate",
+        "schema": "npx prisma generate",
+        "recreate": "npx prisma generate && npx prisma migrate dev",
         "uzip": "tar -xzvf ./prisma/data/zipped_data.tar.gz -C ./prisma/data/",
         "rm-uzip": "rm -rf ./prisma/data/zipped"
     },
