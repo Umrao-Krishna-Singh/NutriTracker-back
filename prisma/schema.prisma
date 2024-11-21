@@ -35,8 +35,6 @@ datasource db {
 
 model User {
   id Int @id @db.UnsignedInt() @default(autoincrement()) 
-  /// @zod.string.max(80)
-  username String @db.VarChar(80) @unique
   /// @zod.string.max(100)
   pass_hash String @db.VarChar(100)
   /// @zod.string.max(126)
