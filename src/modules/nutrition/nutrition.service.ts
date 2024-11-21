@@ -4,6 +4,8 @@ import {
     GetFoodItemResDto,
     GetFoodListResDto,
     GetFoodListFullQueryDto,
+    GetFoodDetailsDto,
+    FoodDetailsQueryDto,
 } from './nutrition.dto'
 import { sql } from 'kysely'
 import { ResHelperService } from '@src/response-helpers/res-help.service'
@@ -49,5 +51,31 @@ export class NutritionService {
             .execute()
 
         return this.rhs.paginate(data, page, limit)
+    }
+
+    async getFoodDetails(
+        foodDetailsQuery: FoodDetailsQueryDto,
+    ): Promise<GetFoodDetailsDto> {
+        const { id, limit, page } = foodDetailsQuery
+        const foodDetails = await this.db
+            .selectFrom(['Food'])
+            .innerJoin('FoodNutrient', 'FoodNutrient.food_id', 'Food.id')
+            .innerJoin('Nutrient', 'Nutrient.id', 'FoodNutrient.nutrient_id')
+            .select([
+                'Food.id',
+                'Food.description',
+                'Nutrient.id as nutrient_id',
+                'FoodNutrient.quantity',
+                'Nutrient.name',
+                'Nutrient.unit_name',
+                sql<number>`COUNT(*) OVER()`.as('total_count'),
+            ])
+            .where('Food.id', '=', id)
+            .orderBy('nutrient_id')
+            .offset((page - 1) * limit)
+            .limit(limit)
+            .execute()
+
+        return this.rhs.paginate(foodDetails, page, limit)
     }
 }

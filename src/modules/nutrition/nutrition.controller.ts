@@ -1,4 +1,4 @@
-import { Logger, Get, Query, Param, Body } from '@nestjs/common'
+import { Logger, Get, Query } from '@nestjs/common'
 import { NutritionService } from './nutrition.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
 import {
@@ -9,6 +9,9 @@ import {
     getFoodSuggestedListSchema,
     getFoodListFullSchema,
     GetFoodListResDto,
+    FoodDetailsQueryDto,
+    GetFoodDetailsDto,
+    DetailsQuerySchema,
 } from './nutrition.dto'
 import { ZodValidationPipe } from '@src/common/pipes/zod-input-validation.pipe'
 import { ApiGeneralResponse } from '@src/common/decorators/swagger.decorator'
@@ -34,5 +37,14 @@ export class NutritionController {
         foodListDto: GetFoodListFullQueryDto,
     ): Promise<GetFoodListResDto> {
         return await this.searchService.getFoodList(foodListDto)
+    }
+
+    @Get('/food-details')
+    @ApiGeneralResponse({ type: GetFoodDetailsDto })
+    async getFoodDetails(
+        @Query(new ZodValidationPipe(DetailsQuerySchema))
+        food: FoodDetailsQueryDto,
+    ): Promise<GetFoodDetailsDto> {
+        return await this.searchService.getFoodDetails(food)
     }
 }
