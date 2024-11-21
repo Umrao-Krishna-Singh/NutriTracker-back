@@ -41,7 +41,7 @@ class InternalError {
     status!: boolean
     @ApiProperty({ example: 500 })
     code!: number
-    @ApiProperty({ example: 'Something went wrong' })
+    @ApiProperty({ example: 'Internal server error' })
     message!: string
 }
 
