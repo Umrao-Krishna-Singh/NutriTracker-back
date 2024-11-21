@@ -40,7 +40,9 @@ model User {
   /// @zod.string.max(100)
   pass_hash String @db.VarChar(100)
   /// @zod.string.max(126)
-  fullname  String @db.VarChar(126)
+  first_name  String @db.VarChar(126)
+  /// @zod.string.max(126)
+  last_name  String @db.VarChar(126)
   /// @zod.string.max(256)
   email String  @db.VarChar(256) @unique
   is_verified Boolean @default(false)
