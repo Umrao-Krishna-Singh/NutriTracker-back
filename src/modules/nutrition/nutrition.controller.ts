@@ -14,7 +14,7 @@ import {
     DetailsQuerySchema,
 } from './nutrition.dto'
 import { ZodValidationPipe } from '@src/common/pipes/zod-input-validation.pipe'
-import { ApiGeneralResponse } from '@src/common/decorators/swagger.decorator'
+import { ApiOpenResponse } from '@src/common/decorators/swagger.decorator'
 
 @ApiController('nutrition')
 export class NutritionController {
@@ -22,7 +22,7 @@ export class NutritionController {
     constructor(private readonly searchService: NutritionService) {}
 
     @Get('/food-list-suggest')
-    @ApiGeneralResponse({ type: GetFoodListSuggestResDto })
+    @ApiOpenResponse({ type: GetFoodListSuggestResDto })
     async getFoodListSuggest(
         @Query(new ZodValidationPipe(getFoodSuggestedListSchema))
         foodListDto: GetFoodListSuggestQueryDto,
@@ -31,7 +31,7 @@ export class NutritionController {
     }
 
     @Get('/food-list')
-    @ApiGeneralResponse({ type: GetFoodListResDto })
+    @ApiOpenResponse({ type: GetFoodListResDto })
     async getFoodList(
         @Query(new ZodValidationPipe(getFoodListFullSchema))
         foodListDto: GetFoodListFullQueryDto,
@@ -40,7 +40,7 @@ export class NutritionController {
     }
 
     @Get('/food-details')
-    @ApiGeneralResponse({ type: GetFoodDetailsDto })
+    @ApiOpenResponse({ type: GetFoodDetailsDto })
     async getFoodDetails(
         @Query(new ZodValidationPipe(DetailsQuerySchema))
         food: FoodDetailsQueryDto,
