@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class SuccessDto {
     @ApiProperty({ example: true, description: 'Response status' })
@@ -19,8 +19,8 @@ export class PaginateDto {
 }
 
 export class PgReqDto {
-    @ApiProperty({ example: 1, description: 'Page number' })
+    @ApiPropertyOptional({ example: 1, description: 'Page number' })
     page!: number
-    @ApiProperty({ example: 10, description: 'Number of items per page' })
+    @ApiPropertyOptional({ example: 10, description: 'Number of items per page' })
     limit!: number
 }
