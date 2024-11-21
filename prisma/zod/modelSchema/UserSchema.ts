@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const UserSchema = z.object({
   id: z.number().int(),
   username: z.string().max(80),
-  password_hash: z.string().max(100),
+  pass_hash: z.string().max(100),
   fullname: z.string().max(126),
   email: z.string().max(256),
   is_verified: z.boolean(),

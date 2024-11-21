@@ -38,7 +38,7 @@ model User {
   /// @zod.string.max(80)
   username String @db.VarChar(80) @unique
   /// @zod.string.max(100)
-  password_hash String @db.VarChar(100)
+  pass_hash String @db.VarChar(100)
   /// @zod.string.max(126)
   fullname  String @db.VarChar(126)
   /// @zod.string.max(256)

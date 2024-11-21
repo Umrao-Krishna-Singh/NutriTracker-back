@@ -64,7 +64,7 @@ export type User = {
     /**
      * @zod.string.max(100)
      */
-    password_hash: string;
+    pass_hash: string;
     /**
      * @zod.string.max(126)
      */
