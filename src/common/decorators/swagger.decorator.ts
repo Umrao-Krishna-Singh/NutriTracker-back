@@ -77,3 +77,16 @@ export function ApiGeneralResponse(options: ApiResponseNoStatusOptions) {
         }),
     )
 }
+
+export function ApiOpenResponse(options: ApiResponseNoStatusOptions) {
+    if (!options.description) options.description = 'Success'
+
+    return applyDecorators(
+        ApiOkResponse(options),
+        ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
+        ApiInternalServerErrorResponse({
+            type: InternalError,
+            description: 'Server Exception',
+        }),
+    )
+}
