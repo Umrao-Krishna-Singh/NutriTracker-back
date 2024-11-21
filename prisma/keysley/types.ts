@@ -68,7 +68,11 @@ export type User = {
     /**
      * @zod.string.max(126)
      */
-    fullname: string;
+    first_name: string;
+    /**
+     * @zod.string.max(126)
+     */
+    last_name: string;
     /**
      * @zod.string.max(256)
      */
