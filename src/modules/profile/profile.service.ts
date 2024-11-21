@@ -1,7 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common'
-import { UserOptionalDefaults } from '@prism/zod'
+// import { UserOptionalDefaults } from '@prism/zod'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
-import { EmailCheckResDto, EmailResEnum, SignupResponseDto } from './profile.dto'
+import { EmailCheckResDto } from './profile.dto'
 import { ResHelperService } from '@src/response-helpers/res-help.service'
 
 @Injectable()
@@ -26,30 +26,28 @@ export class ProfileService {
 
         if (!user) {
             //signup
-            return this.rhs.success(EmailResEnum.notFound)
-        } else if (!user.is_verified) {
-            //send otp email and ask for it
-            return this.rhs.success(EmailResEnum.unverified)
+            return this.rhs.success(false)
         } else {
-            return this.rhs.success(EmailResEnum.found)
+            return this.rhs.success(true)
         }
     }
 
-    async signup(
-        usr: Omit<UserOptionalDefaults, 'status' | 'is_verified'>,
-    ): Promise<SignupResponseDto> {
-        let user: SignupResponseDto | undefined
-        const { insertId } = (await this.db.insertInto('User').values(usr).execute())[0]
+    async signup() // usr: Omit<UserOptionalDefaults, 'status' | 'is_verified'>,
+    : Promise<number> {
+        // let user: SignupResponseDto | undefined
+        // const { insertId } = (await this.db.insertInto('User').values(usr).execute())[0]
 
-        if (insertId)
-            user = await this.db
-                .selectFrom('User')
-                .select(['id', 'username', 'fullname', 'email'])
-                .where('id', '=', Number(insertId))
-                .where('status', '=', 1)
-                .executeTakeFirst()
+        // if (insertId)
+        //     user = await this.db
+        //         .selectFrom('User')
+        //         .select(['id', 'username', 'fullname', 'email'])
+        //         .where('id', '=', Number(insertId))
+        //         .where('status', '=', 1)
+        //         .executeTakeFirst()
 
-        if (!user) throw new Error(`User created but details not found: id ${insertId}`)
-        return user
+        // if (!user) throw new Error(`User created but details not found: id ${insertId}`)
+        // return user
+
+        return 1
     }
 }

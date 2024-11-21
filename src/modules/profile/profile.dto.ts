@@ -10,24 +10,7 @@ export class EmailCheckBodyDto {
     email!: string
 }
 
-export const EmailResEnum = {
-    notFound: 0,
-    unverified: 1,
-    found: 2,
-} as const
-
-export type BodyResEnum = (typeof EmailResEnum)[keyof typeof EmailResEnum]
 export class EmailCheckResDto extends SuccessDto {
-    @ApiProperty({
-        enum: Object.values(EmailResEnum),
-        description: 'User not found - 0, user unverified - 1, user found - 2 ',
-    })
-    data!: BodyResEnum
-}
-
-export type SignupResponseDto = {
-    id: number
-    fullname: string
-    username: string
-    email: string
+    @ApiProperty({ type: Boolean, example: true })
+    data!: boolean
 }
