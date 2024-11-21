@@ -2,12 +2,7 @@ import { z } from 'zod'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { SuccessDto, PaginateDto, PgReqDto } from '@src/utils/swagger.dtos.util'
 import { Units } from '@prism/keysley/enums'
-
-const { coerce: co } = z
-const pgReqSchema = z.object({
-    page: co.number().int().min(1).default(1),
-    limit: co.number().int().min(1).default(10),
-})
+import { co, pgReqSchema } from '@src/utils/zod-common.schema.util'
 
 export const getFoodSuggestedListSchema = z
     .object({ search: z.string().min(1) })
