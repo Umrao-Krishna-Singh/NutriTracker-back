@@ -1,17 +1,17 @@
 import { z } from 'zod'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { SuccessDto, PaginateDto } from '@src/utils/dtos/swagger.dtos.util'
+import { SuccessDto, PaginateDto, PgReqDto } from '@src/utils/swagger.dtos.util'
 import { Units } from '@prism/keysley/enums'
-
-export const getFoodSuggestedListSchema = z
-    .object({ search: z.string().min(1) })
-    .required()
 
 const { coerce: co } = z
 const pgReqSchema = z.object({
     page: co.number().int().min(1).default(1),
     limit: co.number().int().min(1).default(10),
 })
+
+export const getFoodSuggestedListSchema = z
+    .object({ search: z.string().min(1) })
+    .required()
 
 export const getFoodListFullSchema = pgReqSchema
     .extend({ search: z.string().min(1) })
@@ -21,13 +21,6 @@ export const DetailsQuerySchema = pgReqSchema.extend({ id: co.number().int().min
 export class GetFoodListSuggestQueryDto {
     @ApiProperty({ example: 'Milk', description: 'Food item name' })
     search!: string
-}
-
-class PgReqDto {
-    @ApiPropertyOptional({ example: 1, description: 'Page number' })
-    page!: number
-    @ApiPropertyOptional({ example: 10, description: 'Number of items per page' })
-    limit!: number
 }
 
 export class GetFoodListFullQueryDto extends PgReqDto {
