@@ -14,6 +14,10 @@ const ENVSchema = z.object({
     DB_CONN_LIMIT: coerce.number(),
     NODE_ENV: z.enum(['dev', 'test', 'prod']).default('dev'),
     LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug', 'silly']).default('info'),
+    SALT_ROUNDS: coerce.number().int().min(1).default(10),
+    JWT_SECRET: coerce.string(),
+    AUTH_EXPIRY: coerce.string(),
+    REFRESH_EXPIRY: coerce.string(),
     // NEST_DEBUG: coerce.boolean(),
 })
 
