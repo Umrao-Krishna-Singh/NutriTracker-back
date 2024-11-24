@@ -1,8 +1,15 @@
-import { Post, Logger, Body } from '@nestjs/common'
+import { Post, Get, Logger, Body } from '@nestjs/common'
 import { ProfileService } from './profile.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
 import { ZodValidationPipe } from '@src/common/pipes/zod-input-validation.pipe'
-import { EmailCheckBodyDto, EmailCheckResDto, emailCheckSchema } from './profile.dto'
+import {
+    EmailCheckBodyDto,
+    EmailCheckResDto,
+    emailCheckSchema,
+    SignupBodyDto,
+    SignupResDto,
+    signupSchema,
+} from './profile.dto'
 import { ApiOpenResponse } from '@src/common/decorators/swagger.decorator'
 
 @ApiController('profile')
@@ -17,5 +24,14 @@ export class ProfileController {
         input: EmailCheckBodyDto,
     ): Promise<EmailCheckResDto> {
         return await this.profileService.checkEmail(input.email)
+    }
+
+    @Post('/signup')
+    @ApiOpenResponse({ type: SignupResDto })
+    async signup(
+        @Body(new ZodValidationPipe(signupSchema))
+        input: SignupBodyDto,
+    ): Promise<SignupResDto> {
+        return await this.profileService.signup(input)
     }
 }
