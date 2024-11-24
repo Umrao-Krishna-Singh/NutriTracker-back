@@ -1,5 +1,6 @@
 export { TransactionIsolationLevelSchema } from './TransactionIsolationLevelSchema';
 export { UserScalarFieldEnumSchema } from './UserScalarFieldEnumSchema';
+export { UserRoleScalarFieldEnumSchema } from './UserRoleScalarFieldEnumSchema';
 export { UserAuthTokenScalarFieldEnumSchema } from './UserAuthTokenScalarFieldEnumSchema';
 export { UserRefreshTokenScalarFieldEnumSchema } from './UserRefreshTokenScalarFieldEnumSchema';
 export { FoodScalarFieldEnumSchema } from './FoodScalarFieldEnumSchema';
@@ -10,4 +11,5 @@ export { TagScalarFieldEnumSchema } from './TagScalarFieldEnumSchema';
 export { FoodTagScalarFieldEnumSchema } from './FoodTagScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
+export { RolesSchema } from './RolesSchema';
 export { UnitsSchema } from './UnitsSchema';

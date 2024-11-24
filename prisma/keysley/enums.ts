@@ -1,3 +1,8 @@
+export const Roles = {
+    USER: "USER",
+    ADMIN: "ADMIN"
+} as const;
+export type Roles = (typeof Roles)[keyof typeof Roles];
 export const Units = {
     G: "G",
     IU: "IU",

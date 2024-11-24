@@ -4,7 +4,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { Units } from "./enums";
+import type { Roles, Units } from "./enums";
 
 export type DuplicateFood = {
     id: Generated<number>;
@@ -101,6 +101,12 @@ export type UserRefreshToken = {
     expire_at: Timestamp;
     created_at: Generated<Timestamp>;
 };
+export type UserRole = {
+    id: Generated<number>;
+    user_id: number;
+    role: Roles;
+    status: Generated<number>;
+};
 export type DB = {
     DuplicateFood: DuplicateFood;
     Food: Food;
@@ -111,4 +117,5 @@ export type DB = {
     User: User;
     UserAuthToken: UserAuthToken;
     UserRefreshToken: UserRefreshToken;
+    UserRole: UserRole;
 };
