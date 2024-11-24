@@ -51,6 +51,21 @@ model User {
   status Boolean @default(true)
   user_auth_token UserAuthToken[]
   user_refresh_token UserRefreshToken[]
+  user_role UserRole[]
+}
+
+enum Roles {
+  USER
+  ADMIN  
+}
+
+model UserRole {
+  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  user User @relation(fields: [user_id], references: [id])
+  user_id Int @db.UnsignedInt()
+  role Roles
+  status Boolean @default(true)
+  @@unique([user_id, role, status])
 }
 
 model UserAuthToken {
