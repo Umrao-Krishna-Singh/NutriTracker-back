@@ -17,9 +17,9 @@ export class ZodValidationExceptionFilter implements ExceptionFilter {
                 : `\`${firstError.path}\`: ${firstError.message}`
 
         response.status(exception.getStatus()).type('application/json').send({
-            error,
-            message: 'Validation failed',
-            statusCode: exception.getStatus(),
+            status: false,
+            code: exception.getStatus(),
+            message: error,
         })
     }
 }
