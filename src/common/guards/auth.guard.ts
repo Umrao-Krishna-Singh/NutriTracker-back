@@ -4,6 +4,7 @@ import {
     ExecutionContext,
     UnauthorizedException,
     ForbiddenException,
+    Logger,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
@@ -25,6 +26,8 @@ function isJWT(token: string): boolean {
 
 @Injectable()
 export class AuthGuard implements CanActivate {
+    private logger = new Logger(AuthGuard.name)
+
     constructor(
         private jwtService: JwtService,
         private reflector: Reflector,
@@ -62,7 +65,7 @@ export class AuthGuard implements CanActivate {
         ])
 
         const access = requiredRoles?.some((role) => request.user!.role?.includes(role))
-        if (!access) throw new ForbiddenException('Unauthorized Access')
+        if (requiredRoles && !access) throw new ForbiddenException('Unauthorized Access')
 
         return true
     }
