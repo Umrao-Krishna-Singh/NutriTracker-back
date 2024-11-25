@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 import { SpiderGuard } from '@src/common/guards/spider.guard'
-import { RequestLoggingInterceptor } from '@src/common/interceptors/req-logging.interceptor'
+import { ReqLogIntcptr } from '@src/common/interceptors/req-logging.interceptor'
 import * as bootstrapConfig from '@src/app.bootstrap.config'
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { isDev, ENV } from './app.config'
@@ -29,7 +29,7 @@ async function bootstrap() {
 
     const swaggerEndpoint = 'documentation'
     if (isDev) {
-        app.useGlobalInterceptors(new RequestLoggingInterceptor())
+        app.useGlobalInterceptors(new ReqLogIntcptr())
         const config = new DocumentBuilder()
             .setTitle('NutriTracker Apis')
             .setDescription('Apis to interact with Nutritracker Backend')
