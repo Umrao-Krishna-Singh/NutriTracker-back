@@ -75,10 +75,10 @@ const debugFilter = winston.format((info, opts) => {
     ],
     providers: [
         // { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+        { provide: APP_FILTER, useClass: AllExceptionsFilter },
         { provide: APP_FILTER, useClass: ZodValidationExceptionFilter },
         { provide: APP_FILTER, useClass: UnauthorizedExceptionFilter },
         { provide: APP_FILTER, useClass: ForbiddenExceptionFilter },
-        { provide: APP_FILTER, useClass: AllExceptionsFilter },
     ],
     exports: [WinstonModule],
 })
