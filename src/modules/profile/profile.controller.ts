@@ -10,7 +10,12 @@ import {
     SignupResDto,
     signupSchema,
 } from './profile.dto'
-import { ApiOpenResponse } from '@src/common/decorators/swagger.decorator'
+import {
+    ApiAuthenticatedResponse,
+    ApiAuthorizedResponse,
+    ApiOpenResponse,
+} from '@src/common/decorators/swagger.decorator'
+import { Roles } from '@prism/keysley/enums'
 
 @ApiController('profile')
 export class ProfileController {
@@ -33,5 +38,19 @@ export class ProfileController {
         input: SignupBodyDto,
     ): Promise<SignupResDto> {
         return await this.profileService.signup(input)
+    }
+
+    @Get('/protected-route')
+    @ApiAuthenticatedResponse({ type: SignupResDto })
+    checkMeOut(): string {
+        this.profileService.checkMeOut()
+        return 'no haha'
+    }
+
+    @Get('/authorized-route')
+    @ApiAuthorizedResponse({ roles: [Roles.ADMIN] })
+    authorizeMe(): string {
+        this.profileService.checkMeOut()
+        return 'haha'
     }
 }
