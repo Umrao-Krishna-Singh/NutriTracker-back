@@ -6,13 +6,14 @@ import { DatabaseModule } from '@src/database/db.module'
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston'
 import * as winston from 'winston'
 import { ZodValidationExceptionFilter } from '@src/common/filters/zod-validation.filter'
-// import { AllExceptionsFilter } from '@src/common/filters/all-exceptions.filter'
-import { TransformInterceptor } from '@src/common/interceptors/res-transform.interceptor'
+import { AllExceptionsFilter } from '@src/common/filters/all-exceptions.filter'
+import { ForbiddenExceptionFilter } from '@src/common/filters/forbidden-exceptions.filter'
+import { UnauthorizedExceptionFilter } from '@src/common/filters/unauthorized-exceptions.filter'
 import { ENV } from '@src/app.config'
 import {
     APP_FILTER,
     // APP_GUARD,
-    APP_INTERCEPTOR,
+    // APP_INTERCEPTOR,
     // HttpAdapterHost,
 } from '@nestjs/core'
 // import { ThrottlerGuard } from '@nestjs/throttler'
@@ -73,9 +74,11 @@ const debugFilter = winston.format((info, opts) => {
         ProfileModule,
     ],
     providers: [
-        { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
-        // { provide: APP_FILTER, useClass: AllExceptionsFilter },
+        // { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
         { provide: APP_FILTER, useClass: ZodValidationExceptionFilter },
+        { provide: APP_FILTER, useClass: UnauthorizedExceptionFilter },
+        { provide: APP_FILTER, useClass: ForbiddenExceptionFilter },
+        { provide: APP_FILTER, useClass: AllExceptionsFilter },
     ],
     exports: [WinstonModule],
 })
