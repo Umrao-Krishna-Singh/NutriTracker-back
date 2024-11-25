@@ -124,4 +124,8 @@ export class ProfileService {
 
         return this.rhs.success(returnData)
     }
+
+    async checkMeOut() {
+        this.logger.log('you should not see this')
+    }
 }
