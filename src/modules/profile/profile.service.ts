@@ -1,4 +1,4 @@
-import { Injectable, Inject, Logger, InternalServerErrorException } from '@nestjs/common'
+import { Injectable, Inject, Logger } from '@nestjs/common'
 // import { UserOptionalDefaults } from '@prism/zod'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
 import {
