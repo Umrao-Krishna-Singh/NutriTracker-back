@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { HealthCheckModule } from '@src/modules/healthcheck/healthcheck.module'
 import { NutritionModule } from '@src/modules/nutrition/nutrition.module'
 import { ProfileModule } from './modules/profile/profile.module'
@@ -17,6 +17,7 @@ import {
     // HttpAdapterHost,
 } from '@nestjs/core'
 // import { ThrottlerGuard } from '@nestjs/throttler'
+import { LoggerMiddleware } from './common/middlewares/req-logging-middleware'
 
 const debugFilter = winston.format((info, opts) => {
     if (opts?.invert) return info.level !== 'debug' ? info : false
@@ -82,4 +83,8 @@ const debugFilter = winston.format((info, opts) => {
     ],
     exports: [WinstonModule],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(LoggerMiddleware).forRoutes('*')
+    }
+}
