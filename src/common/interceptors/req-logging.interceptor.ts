@@ -19,12 +19,8 @@ import {
 } from '@nestjs/common'
 
 @Injectable()
-export class RequestLoggingInterceptor implements NestInterceptor {
-    private logger: Logger
-
-    constructor() {
-        this.logger = new Logger(RequestLoggingInterceptor.name)
-    }
+export class ReqLogIntcptr implements NestInterceptor {
+    private logger: Logger = new Logger(ReqLogIntcptr.name)
 
     intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
         const call$ = next.handle()
@@ -32,7 +28,7 @@ export class RequestLoggingInterceptor implements NestInterceptor {
         const request = this.getRequest(context)
 
         const content = `${request.method} -> ${request.url}`
-        this.logger.verbose(`+++ Request：${content}`, RequestLoggingInterceptor.name)
+        this.logger.verbose(`+++ Request：${content}`, ReqLogIntcptr.name)
 
         const now = +new Date()
         SetMetadata(HTTP_REQUEST_TIME, now)(this.getRequest(context))
