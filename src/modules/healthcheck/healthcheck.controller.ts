@@ -2,7 +2,7 @@ import { Get, Logger } from '@nestjs/common'
 import { HealthCheckService } from './healthcheck.service'
 import { ApiController } from '@src/common/decorators/api-controller.decorator'
 import { HealthCheckDto } from './healthcheck.dto'
-import { ApiGeneralResponse } from '@src/common/decorators/swagger.decorator'
+import { ApiOpenResponse } from '@src/common/decorators/swagger.decorator'
 
 @ApiController()
 export class HealthCheckController {
@@ -10,7 +10,7 @@ export class HealthCheckController {
     constructor(private readonly healthCheckService: HealthCheckService) {}
 
     @Get('/test')
-    @ApiGeneralResponse({ type: HealthCheckDto })
+    @ApiOpenResponse({ type: HealthCheckDto })
     async getHello(): Promise<HealthCheckDto> {
         this.logger.log('request received')
 
