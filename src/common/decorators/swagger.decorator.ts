@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpCode, HttpStatus, UseGuards } from '@nestjs/common'
 import {
     ApiProperty,
     ApiUnauthorizedResponse,
@@ -8,6 +8,9 @@ import {
     ApiResponseNoStatusOptions,
     ApiOkResponse,
 } from '@nestjs/swagger'
+import { Roles } from '@prism/keysley/enums'
+import { Role } from './role.decorator'
+import { AuthGuard } from '../guards/auth.guard'
 
 class Unauth {
     @ApiProperty({ example: false })
@@ -60,10 +63,18 @@ export function ApiUnsuccessfulResponse() {
     )
 }
 
-export function ApiGeneralResponse(options: ApiResponseNoStatusOptions) {
+export function ApiAuthorizedResponse(
+    options: ApiResponseNoStatusOptions & { statusCode?: HttpStatus } & {
+        roles: [Roles, ...Roles[]]
+    },
+) {
     if (!options.description) options.description = 'Success'
+    const code = options?.statusCode || 200
 
     return applyDecorators(
+        HttpCode(code),
+        Role(...options.roles),
+        UseGuards(AuthGuard),
         ApiOkResponse(options),
         ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
         ApiUnauthorizedResponse({
@@ -78,12 +89,38 @@ export function ApiGeneralResponse(options: ApiResponseNoStatusOptions) {
     )
 }
 
-export function ApiOpenResponse(options: ApiResponseNoStatusOptions) {
+export function ApiOpenResponse(
+    options: ApiResponseNoStatusOptions & { statusCode?: HttpStatus },
+) {
     if (!options.description) options.description = 'Success'
+    const code = options?.statusCode || 200
 
     return applyDecorators(
+        HttpCode(code),
         ApiOkResponse(options),
         ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
+        ApiInternalServerErrorResponse({
+            type: InternalError,
+            description: 'Server Exception',
+        }),
+    )
+}
+
+export function ApiAuthenticatedResponse(
+    options: ApiResponseNoStatusOptions & { statusCode?: HttpStatus },
+) {
+    if (!options.description) options.description = 'Success'
+    const code = options?.statusCode || 200
+
+    return applyDecorators(
+        HttpCode(code),
+        UseGuards(AuthGuard),
+        ApiOkResponse(options),
+        ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
+        ApiUnauthorizedResponse({
+            type: Unauth,
+            description: 'Authentication Exception',
+        }),
         ApiInternalServerErrorResponse({
             type: InternalError,
             description: 'Server Exception',
