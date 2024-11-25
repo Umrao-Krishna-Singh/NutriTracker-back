@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { getIp } from '@src/utils/ip.util'
-import { RequestLoggingInterceptor } from '../interceptors/req-logging.interceptor'
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -43,11 +42,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         if (prevRequestTs) {
             const content = `${request.method} -> ${request.url}`
             const prevReq = `${content} +${+new Date() - prevRequestTs}ms,`
-            this.logger.verbose(
-                `--- ResponseError：`,
-                prevReq,
-                RequestLoggingInterceptor.name,
-            )
+            this.logger.error(`--- ResponseError：${prevReq}`)
         }
 
         response
