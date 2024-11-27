@@ -167,8 +167,8 @@ model Nutrient {
   fdc_nutrient_id BigInt @db.BigInt() @unique
   name String @db.VarChar(200)
   unit_name Units?
-  nutrient_nbr BigInt? @db.BigInt() @unique
-  rank BigInt? @db.BigInt()
+  nutrient_nbr Int? @db.Integer() @unique
+  rank Int? @db.Integer()
   food_nutrient FoodNutrient[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
