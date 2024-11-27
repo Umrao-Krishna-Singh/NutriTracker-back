@@ -47,8 +47,8 @@ export type Nutrient = {
     fdc_nutrient_id: string;
     name: string;
     unit_name: Units | null;
-    nutrient_nbr: string | null;
-    rank: string | null;
+    nutrient_nbr: number | null;
+    rank: number | null;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
