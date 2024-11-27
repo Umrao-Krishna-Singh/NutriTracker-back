@@ -1,19 +1,19 @@
 import { Injectable, OnModuleInit, Logger } from '@nestjs/common'
-import { Kysely, MysqlDialect } from 'kysely'
-import { createPool } from 'mysql2'
+import { Kysely, PostgresDialect } from 'kysely'
+import { Pool } from 'pg'
 import { ENV, isDev } from '@src/app.config'
 import { DB } from '@prism/keysley/types'
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
-    private readonly dialect = new MysqlDialect({
-        pool: createPool({
+    private readonly dialect = new PostgresDialect({
+        pool: new Pool({
             database: ENV.DB_NAME,
             host: ENV.DB_HOST,
             user: ENV.DB_USER,
             password: ENV.DB_PASS,
             port: ENV.DB_PORT,
-            connectionLimit: ENV.DB_CONN_LIMIT,
+            max: ENV.DB_CONN_LIMIT,
         }),
     })
 
@@ -28,7 +28,7 @@ export class DatabaseService implements OnModuleInit {
             await this.client
                 .selectFrom('User')
                 .select('User.id')
-                .where('User.id', '=', 1)
+                .where('User.id', '=', '1')
                 .execute()
 
             this.logger.log('----Database Connected----')
