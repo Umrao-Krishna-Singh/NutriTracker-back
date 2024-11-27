@@ -3,6 +3,8 @@ export { UserScalarFieldEnumSchema } from './UserScalarFieldEnumSchema';
 export { UserRoleScalarFieldEnumSchema } from './UserRoleScalarFieldEnumSchema';
 export { UserAuthTokenScalarFieldEnumSchema } from './UserAuthTokenScalarFieldEnumSchema';
 export { UserRefreshTokenScalarFieldEnumSchema } from './UserRefreshTokenScalarFieldEnumSchema';
+export { UserEmailScalarFieldEnumSchema } from './UserEmailScalarFieldEnumSchema';
+export { UserEmailOtpScalarFieldEnumSchema } from './UserEmailOtpScalarFieldEnumSchema';
 export { FoodScalarFieldEnumSchema } from './FoodScalarFieldEnumSchema';
 export { DuplicateFoodScalarFieldEnumSchema } from './DuplicateFoodScalarFieldEnumSchema';
 export { NutrientScalarFieldEnumSchema } from './NutrientScalarFieldEnumSchema';

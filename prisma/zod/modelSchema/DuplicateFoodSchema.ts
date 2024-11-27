@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export const DuplicateFoodSchema = z.object({
   id: z.number().int(),
-  description: z.string(),
+  description: z.string().max(500),
   fdc_id: z.number().int().nullable(),
   type: z.number().int(),
   created_at: z.coerce.date(),

@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 export const TagSchema = z.object({
   id: z.number().int(),
-  tag_name: z.string(),
+  tag_name: z.string().max(100),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })

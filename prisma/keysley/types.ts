@@ -8,6 +8,9 @@ import type { Roles, Units } from "./enums";
 
 export type DuplicateFood = {
     id: Generated<number>;
+    /**
+     * @zod.string.max(500)
+     */
     description: string;
     fdc_id: number | null;
     type: number;
@@ -51,6 +54,9 @@ export type Nutrient = {
 };
 export type Tag = {
     id: Generated<number>;
+    /**
+     * @zod.string.max(100)
+     */
     tag_name: string;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
@@ -69,10 +75,6 @@ export type User = {
      * @zod.string.max(126)
      */
     last_name: string;
-    /**
-     * @zod.string.max(256)
-     */
-    email: string;
     is_verified: Generated<number>;
     weight: number | null;
     goal_weight: number | null;
@@ -89,6 +91,25 @@ export type UserAuthToken = {
     issued_at: Timestamp;
     expire_at: Timestamp;
     created_at: Generated<Timestamp>;
+};
+export type UserEmail = {
+    id: Generated<number>;
+    user_id: number | null;
+    is_created: Generated<number>;
+    /**
+     * @zod.string.max(256)
+     */
+    email: string;
+    status: Generated<number>;
+};
+export type UserEmailOtp = {
+    id: Generated<number>;
+    email_id: number;
+    otp: number;
+    expire_at: Timestamp;
+    resend_expire_at: Timestamp;
+    created_at: Generated<Timestamp>;
+    updated_at: Generated<Timestamp>;
 };
 export type UserRefreshToken = {
     id: Generated<number>;
@@ -116,6 +137,8 @@ export type DB = {
     Tag: Tag;
     User: User;
     UserAuthToken: UserAuthToken;
+    UserEmail: UserEmail;
+    UserEmailOtp: UserEmailOtp;
     UserRefreshToken: UserRefreshToken;
     UserRole: UserRole;
 };

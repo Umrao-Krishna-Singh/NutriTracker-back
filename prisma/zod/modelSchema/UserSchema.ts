@@ -9,7 +9,6 @@ export const UserSchema = z.object({
   pass_hash: z.string().max(100),
   first_name: z.string().max(126),
   last_name: z.string().max(126),
-  email: z.string().max(256),
   is_verified: z.boolean(),
   weight: z.number().int().nullable(),
   goal_weight: z.number().int().nullable(),
