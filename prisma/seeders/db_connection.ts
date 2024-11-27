@@ -1,17 +1,17 @@
-import { Kysely, MysqlDialect } from 'kysely'
-import { createPool } from 'mysql2'
+import { Kysely, PostgresDialect } from 'kysely'
+import { Pool } from 'pg'
 import { ENV } from '../../src/app.config'
 import { DB } from '../keysley/types'
 
 export class DatabaseService {
-    private readonly dialect = new MysqlDialect({
-        pool: createPool({
+    private readonly dialect = new PostgresDialect({
+        pool: new Pool({
             database: ENV.DB_NAME,
             host: ENV.DB_HOST,
             user: ENV.DB_USER,
             password: ENV.DB_PASS,
             port: ENV.DB_PORT,
-            connectionLimit: ENV.DB_CONN_LIMIT,
+            max: ENV.DB_CONN_LIMIT,
         }),
     })
 
@@ -24,7 +24,7 @@ export class DatabaseService {
         await this.client
             .selectFrom('User')
             .select('User.id')
-            .where('User.id', '=', 1)
+            .where('User.id', '=', '1')
             .execute()
 
         console.log('----Database Connected----')
