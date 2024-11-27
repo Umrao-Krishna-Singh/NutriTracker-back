@@ -45,11 +45,11 @@ export default async function seedNutrient() {
 
 const parseData = (row: string) => {
     const values = modifiedSplit(row)
-    const fdc_nutrient_id = values[0] ? Number(values[0]) : null
+    const fdc_nutrient_id = values[0] ? String(+values[0]) : null
     const name = values[1] ? values[1].trim() : null
     const unit_name = values[2] ? values[2].trim() : null
-    const nutrient_nbr = values[3] ? Number(values[3]) * 100 : null
-    const rank = values[4] ? Number(values[4]) : null
+    const nutrient_nbr = values[3] ? Math.floor(+values[3] * 100) : null
+    const rank = values[4] ? +values[4] : null
 
     if (!fdc_nutrient_id && !name && !unit_name && !nutrient_nbr && !rank) return
 

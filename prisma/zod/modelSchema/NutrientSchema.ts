@@ -10,8 +10,8 @@ export const NutrientSchema = z.object({
   id: z.bigint(),
   fdc_nutrient_id: z.bigint(),
   name: z.string(),
-  nutrient_nbr: z.bigint().nullable(),
-  rank: z.bigint().nullable(),
+  nutrient_nbr: z.number().int().nullable(),
+  rank: z.number().int().nullable(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })
