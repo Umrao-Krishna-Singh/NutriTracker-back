@@ -5,8 +5,8 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const FoodSchema = z.object({
-  id: z.number().int(),
-  fdc_id: z.number().int().nullable(),
+  id: z.bigint(),
+  fdc_id: z.bigint().nullable(),
   description: z.string().max(500),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
@@ -19,7 +19,7 @@ export type Food = z.infer<typeof FoodSchema>
 /////////////////////////////////////////
 
 export const FoodOptionalDefaultsSchema = FoodSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

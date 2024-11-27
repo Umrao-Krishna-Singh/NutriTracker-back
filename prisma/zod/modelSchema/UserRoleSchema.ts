@@ -7,8 +7,8 @@ import { RolesSchema } from '../inputTypeSchemas/RolesSchema'
 
 export const UserRoleSchema = z.object({
   role: RolesSchema,
-  id: z.number().int(),
-  user_id: z.number().int(),
+  id: z.bigint(),
+  user_id: z.bigint(),
   status: z.boolean(),
 })
 
@@ -19,7 +19,7 @@ export type UserRole = z.infer<typeof UserRoleSchema>
 /////////////////////////////////////////
 
 export const UserRoleOptionalDefaultsSchema = UserRoleSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   status: z.boolean().optional(),
 }))
 

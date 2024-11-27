@@ -5,9 +5,9 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const FoodTagSchema = z.object({
-  id: z.number().int(),
-  food_id: z.number().int(),
-  tag_id: z.number().int(),
+  id: z.bigint(),
+  food_id: z.bigint(),
+  tag_id: z.bigint(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })
@@ -19,7 +19,7 @@ export type FoodTag = z.infer<typeof FoodTagSchema>
 /////////////////////////////////////////
 
 export const FoodTagOptionalDefaultsSchema = FoodTagSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

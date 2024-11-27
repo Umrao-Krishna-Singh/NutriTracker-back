@@ -5,8 +5,8 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const UserRefreshTokenSchema = z.object({
-  id: z.number().int(),
-  user_id: z.number().int(),
+  id: z.bigint(),
+  user_id: z.bigint(),
   token: z.string().max(500),
   issued_at: z.coerce.date(),
   expire_at: z.coerce.date(),
@@ -20,7 +20,7 @@ export type UserRefreshToken = z.infer<typeof UserRefreshTokenSchema>
 /////////////////////////////////////////
 
 export const UserRefreshTokenOptionalDefaultsSchema = UserRefreshTokenSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
 }))
 

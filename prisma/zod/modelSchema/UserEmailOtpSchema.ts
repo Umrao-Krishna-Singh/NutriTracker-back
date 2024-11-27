@@ -5,8 +5,8 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const UserEmailOtpSchema = z.object({
-  id: z.number().int(),
-  email_id: z.number().int(),
+  id: z.bigint(),
+  email_id: z.bigint(),
   otp: z.number().int(),
   expire_at: z.coerce.date(),
   resend_expire_at: z.coerce.date(),
@@ -21,7 +21,7 @@ export type UserEmailOtp = z.infer<typeof UserEmailOtpSchema>
 /////////////////////////////////////////
 
 export const UserEmailOtpOptionalDefaultsSchema = UserEmailOtpSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

@@ -7,11 +7,11 @@ import { UnitsSchema } from '../inputTypeSchemas/UnitsSchema'
 
 export const NutrientSchema = z.object({
   unit_name: UnitsSchema.nullable(),
-  id: z.number().int(),
-  fdc_nutrient_id: z.number().int(),
+  id: z.bigint(),
+  fdc_nutrient_id: z.bigint(),
   name: z.string(),
-  nutrient_nbr: z.number().int().nullable(),
-  rank: z.number().int().nullable(),
+  nutrient_nbr: z.bigint().nullable(),
+  rank: z.bigint().nullable(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
 })
@@ -23,7 +23,7 @@ export type Nutrient = z.infer<typeof NutrientSchema>
 /////////////////////////////////////////
 
 export const NutrientOptionalDefaultsSchema = NutrientSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

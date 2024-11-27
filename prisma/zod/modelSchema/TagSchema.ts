@@ -5,7 +5,7 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const TagSchema = z.object({
-  id: z.number().int(),
+  id: z.bigint(),
   tag_name: z.string().max(100),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
@@ -18,7 +18,7 @@ export type Tag = z.infer<typeof TagSchema>
 /////////////////////////////////////////
 
 export const TagOptionalDefaultsSchema = TagSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

@@ -5,8 +5,8 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const UserEmailSchema = z.object({
-  id: z.number().int(),
-  user_id: z.number().int().nullable(),
+  id: z.bigint(),
+  user_id: z.bigint().nullable(),
   is_created: z.boolean(),
   email: z.string().max(256),
   status: z.boolean(),
@@ -19,7 +19,7 @@ export type UserEmail = z.infer<typeof UserEmailSchema>
 /////////////////////////////////////////
 
 export const UserEmailOptionalDefaultsSchema = UserEmailSchema.merge(z.object({
-  id: z.number().int().optional(),
+  id: z.bigint().optional(),
   is_created: z.boolean().optional(),
   status: z.boolean().optional(),
 }))

@@ -12,6 +12,7 @@ export { FoodNutrientScalarFieldEnumSchema } from './FoodNutrientScalarFieldEnum
 export { TagScalarFieldEnumSchema } from './TagScalarFieldEnumSchema';
 export { FoodTagScalarFieldEnumSchema } from './FoodTagScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';
+export { QueryModeSchema } from './QueryModeSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
 export { RolesSchema } from './RolesSchema';
 export { UnitsSchema } from './UnitsSchema';
