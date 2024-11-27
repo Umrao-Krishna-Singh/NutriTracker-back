@@ -30,6 +30,7 @@ export const signupSchema = UserOptionalDefaultsSchema.merge(
     .omit({ pass_hash: true })
     .extend({
         password: z.string().trim().min(12).max(35),
+        otp: z.number().int().min(100000).max(900000),
     })
 
 export class SignupBodyDto {
@@ -41,6 +42,8 @@ export class SignupBodyDto {
     password!: string
     @ApiProperty({ example: 'mynew@email.com' })
     email!: string
+    @ApiProperty({ example: 123456 })
+    otp!: number
     @ApiPropertyOptional({ example: 75500, description: 'weight in grams' })
     weight!: number | null
     @ApiPropertyOptional({ example: 65500, description: 'weight in grams' })
