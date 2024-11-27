@@ -18,6 +18,10 @@ const ENVSchema = z.object({
     JWT_SECRET: coerce.string(),
     AUTH_EXPIRY: coerce.string(),
     REFRESH_EXPIRY: coerce.string(),
+    SMTP_USER: coerce.string(),
+    SMTP_PASS: coerce.string(),
+    OTP_EXPIRY: coerce.number().int(),
+    OTP_RESEND_EXPIRY: coerce.number().int(),
     // NEST_DEBUG: coerce.boolean(),
 })
 
