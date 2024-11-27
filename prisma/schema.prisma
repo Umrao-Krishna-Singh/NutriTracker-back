@@ -29,12 +29,12 @@ generator zod-prisma-types {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   /// @zod.string.max(100)
   pass_hash String @db.VarChar(100)
   /// @zod.string.max(126)
@@ -43,9 +43,9 @@ model User {
   last_name  String @db.VarChar(126)
   is_verified Boolean @default(false)
   //weight in grams and height in mm
-  weight Int? @db.UnsignedMediumInt()
-  goal_weight Int? @db.UnsignedMediumInt()
-  height Int? @db.UnsignedSmallInt()
+  weight Int? @db.Integer()
+  goal_weight Int? @db.Integer()
+  height Int? @db.Integer()
   status Boolean @default(true)
   user_auth_token UserAuthToken[]
   user_refresh_token UserRefreshToken[]
@@ -59,18 +59,18 @@ enum Roles {
 }
 
 model UserRole {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id Int @db.UnsignedInt()
+  user_id BigInt @db.BigInt()
   role Roles
   status Boolean @default(true)
   @@unique([user_id, role, status])
 }
 
 model UserAuthToken {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id Int @db.UnsignedInt()
+  user_id BigInt @db.BigInt()
   /// @zod.string.max(500)
   token String @db.VarChar(500) @unique
   issued_at DateTime
@@ -79,9 +79,9 @@ model UserAuthToken {
 }
 
 model UserRefreshToken {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id Int @db.UnsignedInt()
+  user_id BigInt @db.BigInt()
   /// @zod.string.max(500)
   token String @db.VarChar(500) @unique
   issued_at DateTime
@@ -94,9 +94,9 @@ model UserRefreshToken {
 // status field = if the user is deleted - turn this to false, turn is created to false and set user_id to null. 
 // If the user then tries to again create the account with same email then process starts anew with new user_id getting linked to this email and status being set to true
 model UserEmail {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   user User? @relation(fields: [user_id], references: [id])
-  user_id Int? @db.UnsignedInt() @unique
+  user_id BigInt? @db.BigInt() @unique
   is_created Boolean @default(false)
   /// @zod.string.max(256)
   email String  @db.VarChar(256) @unique
@@ -106,10 +106,10 @@ model UserEmail {
 
 
 model UserEmailOtp {
-  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  id BigInt @id @db.BigInt() @default(autoincrement())
   email UserEmail @relation(fields: [email_id], references: [id])
-  email_id Int @db.UnsignedInt() @unique
-  otp Int @db.UnsignedMediumInt()
+  email_id BigInt @db.BigInt() @unique
+  otp Int @db.Integer()
   expire_at DateTime
   resend_expire_at DateTime
   created_at DateTime @default(now())
@@ -122,8 +122,8 @@ model UserEmailOtp {
 // model CustomFood - user id, food description. 
 
 model Food {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
-  fdc_id Int? @db.UnsignedInt() @unique
+  id BigInt @id @db.BigInt() @default(autoincrement())
+  fdc_id BigInt? @db.BigInt() @unique
   /// @zod.string.max(500)
   description String @db.VarChar(500) @unique
   food_nutrient FoodNutrient[]
@@ -138,10 +138,10 @@ model Food {
 // 2 - duplicate description
 // 3 - both duplicate
 model DuplicateFood {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
+  id BigInt @id @db.BigInt() @default(autoincrement())
   /// @zod.string.max(500)
   description String @db.VarChar(500) 
-  fdc_id Int? @db.UnsignedInt() 
+  fdc_id BigInt? @db.BigInt() 
   type Int @db.SmallInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
@@ -163,32 +163,32 @@ enum Units {
 }
 
 model Nutrient {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
-  fdc_nutrient_id Int @db.UnsignedInt() @unique
+  id BigInt @id @db.BigInt() @default(autoincrement())
+  fdc_nutrient_id BigInt @db.BigInt() @unique
   name String @db.VarChar(200)
   unit_name Units?
-  nutrient_nbr Int? @db.UnsignedMediumInt() @unique
-  rank Int? @db.UnsignedMediumInt()
+  nutrient_nbr BigInt? @db.BigInt() @unique
+  rank BigInt? @db.BigInt()
   food_nutrient FoodNutrient[]
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
 }
 
 model FoodNutrient {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
+  id BigInt @id @db.BigInt() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
-  food_id Int @db.UnsignedInt()
+  food_id BigInt @db.BigInt()
   nutrient Nutrient @relation(fields: [nutrient_id], references: [id])
-  nutrient_id Int @db.UnsignedInt()
+  nutrient_id BigInt @db.BigInt()
   //this will be multiplied by 1000 when saving
-  quantity Int @db.UnsignedInt() 
+  quantity Int @db.Integer() 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
   @@unique([food_id,nutrient_id])
 }
 
 model Tag {
-  id Int @id @db.UnsignedInt() @default(autoincrement())
+  id BigInt @id @db.BigInt() @default(autoincrement())
   /// @zod.string.max(100)
   tag_name String @db.VarChar(100) @unique
   food_tags FoodTag[]
@@ -197,11 +197,11 @@ model Tag {
 }
 
 model FoodTag {
-  id Int @id @db.UnsignedInt() @default(autoincrement())  
+  id BigInt @id @db.BigInt() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
-  food_id Int @db.UnsignedInt()
+  food_id BigInt @db.BigInt()
   tag Tag @relation(fields: [tag_id], references: [id])
-  tag_id Int @db.UnsignedInt()
+  tag_id BigInt @db.BigInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
   @@unique([food_id,tag_id])
