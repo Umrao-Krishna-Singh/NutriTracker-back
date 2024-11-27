@@ -41,8 +41,6 @@ model User {
   first_name  String @db.VarChar(126)
   /// @zod.string.max(126)
   last_name  String @db.VarChar(126)
-  /// @zod.string.max(256)
-  email String  @db.VarChar(256) @unique
   is_verified Boolean @default(false)
   //weight in grams and height in mm
   weight Int? @db.UnsignedMediumInt()
@@ -52,6 +50,7 @@ model User {
   user_auth_token UserAuthToken[]
   user_refresh_token UserRefreshToken[]
   user_role UserRole[]
+  user_email UserEmail[]
 }
 
 enum Roles {
@@ -91,6 +90,32 @@ model UserRefreshToken {
 }
 
 
+// is_created = once the user for this email is created then turn this to true. No more OTP to this email once user is created
+// status field = if the user is deleted - turn this to false, turn is created to false and set user_id to null. 
+// If the user then tries to again create the account with same email then process starts anew with new user_id getting linked to this email and status being set to true
+model UserEmail {
+  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  user User? @relation(fields: [user_id], references: [id])
+  user_id Int? @db.UnsignedInt() @unique
+  is_created Boolean @default(false)
+  /// @zod.string.max(256)
+  email String  @db.VarChar(256) @unique
+  status Boolean @default(true)
+  userOtp UserEmailOtp[]
+}
+
+
+model UserEmailOtp {
+  id Int @id @db.UnsignedInt() @default(autoincrement()) 
+  email UserEmail @relation(fields: [email_id], references: [id])
+  email_id Int @db.UnsignedInt() @unique
+  otp Int @db.UnsignedMediumInt()
+  expire_at DateTime
+  resend_expire_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) 
+}
+
 // model UserSearch - user id, search term - suggestion selected: boolean, if selected - selection id.
 // if not selected - full search page -> search chosen from list
 
@@ -114,6 +139,7 @@ model Food {
 // 3 - both duplicate
 model DuplicateFood {
   id Int @id @db.UnsignedInt() @default(autoincrement())
+  /// @zod.string.max(500)
   description String @db.VarChar(500) 
   fdc_id Int? @db.UnsignedInt() 
   type Int @db.SmallInt()
@@ -163,6 +189,7 @@ model FoodNutrient {
 
 model Tag {
   id Int @id @db.UnsignedInt() @default(autoincrement())
+  /// @zod.string.max(100)
   tag_name String @db.VarChar(100) @unique
   food_tags FoodTag[]
   created_at DateTime @default(now())
