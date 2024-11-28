@@ -33,8 +33,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+model User {  
+  id Int @id @db.Integer() @default(autoincrement())
   /// @zod.string.max(100)
   pass_hash String @db.VarChar(100)
   /// @zod.string.max(126)
@@ -59,18 +59,18 @@ enum Roles {
 }
 
 model UserRole {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id BigInt @db.BigInt()
+  user_id Int @db.Integer()
   role Roles
   status Boolean @default(true)
   @@unique([user_id, role, status])
 }
 
 model UserAuthToken {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id BigInt @db.BigInt()
+  user_id Int @db.Integer()
   /// @zod.string.max(500)
   token String @db.VarChar(500) @unique
   issued_at DateTime
@@ -79,9 +79,9 @@ model UserAuthToken {
 }
 
 model UserRefreshToken {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id BigInt @db.BigInt()
+  user_id Int @db.Integer()
   /// @zod.string.max(500)
   token String @db.VarChar(500) @unique
   issued_at DateTime
@@ -94,9 +94,9 @@ model UserRefreshToken {
 // status field = if the user is deleted - turn this to false, turn is created to false and set user_id to null. 
 // If the user then tries to again create the account with same email then process starts anew with new user_id getting linked to this email and status being set to true
 model UserEmail {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   user User? @relation(fields: [user_id], references: [id])
-  user_id BigInt? @db.BigInt() @unique
+  user_id Int? @db.Integer() @unique
   is_created Boolean @default(false)
   /// @zod.string.max(256)
   email String  @db.VarChar(256) @unique
@@ -106,9 +106,9 @@ model UserEmail {
 
 
 model UserEmailOtp {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   email UserEmail @relation(fields: [email_id], references: [id])
-  email_id BigInt @db.BigInt() @unique
+  email_id Int @db.Integer() @unique
   otp Int @db.Integer()
   expire_at DateTime
   resend_expire_at DateTime
@@ -122,8 +122,8 @@ model UserEmailOtp {
 // model CustomFood - user id, food description. 
 
 model Food {
-  id BigInt @id @db.BigInt() @default(autoincrement())
-  fdc_id BigInt? @db.BigInt() @unique
+  id Int @id @db.Integer() @default(autoincrement())
+  fdc_id Int? @db.Integer() @unique
   /// @zod.string.max(500)
   description String @db.VarChar(500) @unique
   food_nutrient FoodNutrient[]
@@ -138,10 +138,10 @@ model Food {
 // 2 - duplicate description
 // 3 - both duplicate
 model DuplicateFood {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   /// @zod.string.max(500)
   description String @db.VarChar(500) 
-  fdc_id BigInt? @db.BigInt() 
+  fdc_id Int? @db.Integer() 
   type Int @db.SmallInt()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
@@ -163,8 +163,8 @@ enum Units {
 }
 
 model Nutrient {
-  id BigInt @id @db.BigInt() @default(autoincrement())
-  fdc_nutrient_id BigInt @db.BigInt() @unique
+  id Int @id @db.Integer() @default(autoincrement())
+  fdc_nutrient_id Int @db.Integer() @unique
   name String @db.VarChar(200)
   unit_name Units?
   nutrient_nbr Int? @db.Integer() @unique
@@ -175,11 +175,11 @@ model Nutrient {
 }
 
 model FoodNutrient {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
-  food_id BigInt @db.BigInt()
+  food_id Int @db.Integer()
   nutrient Nutrient @relation(fields: [nutrient_id], references: [id])
-  nutrient_id BigInt @db.BigInt()
+  nutrient_id Int @db.Integer()
   //this will be multiplied by 1000 when saving
   quantity Int @db.Integer() 
   created_at DateTime @default(now())
@@ -188,7 +188,7 @@ model FoodNutrient {
 }
 
 model Tag {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   /// @zod.string.max(100)
   tag_name String @db.VarChar(100) @unique
   food_tags FoodTag[]
@@ -197,11 +197,11 @@ model Tag {
 }
 
 model FoodTag {
-  id BigInt @id @db.BigInt() @default(autoincrement())
+  id Int @id @db.Integer() @default(autoincrement())
   food Food @relation(fields: [food_id], references: [id])
-  food_id BigInt @db.BigInt()
+  food_id Int @db.Integer()
   tag Tag @relation(fields: [tag_id], references: [id])
-  tag_id BigInt @db.BigInt()
+  tag_id Int @db.Integer()
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) 
   @@unique([food_id,tag_id])
