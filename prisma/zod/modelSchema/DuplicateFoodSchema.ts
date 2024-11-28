@@ -5,9 +5,9 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const DuplicateFoodSchema = z.object({
-  id: z.bigint(),
+  id: z.number().int(),
   description: z.string().max(500),
-  fdc_id: z.bigint().nullable(),
+  fdc_id: z.number().int().nullable(),
   type: z.number().int(),
   created_at: z.coerce.date(),
   updated_at: z.coerce.date(),
@@ -20,7 +20,7 @@ export type DuplicateFood = z.infer<typeof DuplicateFoodSchema>
 /////////////////////////////////////////
 
 export const DuplicateFoodOptionalDefaultsSchema = DuplicateFoodSchema.merge(z.object({
-  id: z.bigint().optional(),
+  id: z.number().int().optional(),
   created_at: z.coerce.date().optional(),
   updated_at: z.coerce.date().optional(),
 }))

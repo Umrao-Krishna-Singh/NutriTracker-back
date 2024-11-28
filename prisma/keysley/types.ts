@@ -7,19 +7,19 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 import type { Roles, Units } from "./enums";
 
 export type DuplicateFood = {
-    id: Generated<string>;
+    id: Generated<number>;
     /**
      * @zod.string.max(500)
      */
     description: string;
-    fdc_id: string | null;
+    fdc_id: number | null;
     type: number;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
 export type Food = {
-    id: Generated<string>;
-    fdc_id: string | null;
+    id: Generated<number>;
+    fdc_id: number | null;
     /**
      * @zod.string.max(500)
      */
@@ -28,23 +28,23 @@ export type Food = {
     updated_at: Generated<Timestamp>;
 };
 export type FoodNutrient = {
-    id: Generated<string>;
-    food_id: string;
-    nutrient_id: string;
+    id: Generated<number>;
+    food_id: number;
+    nutrient_id: number;
     quantity: number;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
 export type FoodTag = {
-    id: Generated<string>;
-    food_id: string;
-    tag_id: string;
+    id: Generated<number>;
+    food_id: number;
+    tag_id: number;
     created_at: Generated<Timestamp>;
     updated_at: Generated<Timestamp>;
 };
 export type Nutrient = {
-    id: Generated<string>;
-    fdc_nutrient_id: string;
+    id: Generated<number>;
+    fdc_nutrient_id: number;
     name: string;
     unit_name: Units | null;
     nutrient_nbr: number | null;
@@ -53,7 +53,7 @@ export type Nutrient = {
     updated_at: Generated<Timestamp>;
 };
 export type Tag = {
-    id: Generated<string>;
+    id: Generated<number>;
     /**
      * @zod.string.max(100)
      */
@@ -62,7 +62,7 @@ export type Tag = {
     updated_at: Generated<Timestamp>;
 };
 export type User = {
-    id: Generated<string>;
+    id: Generated<number>;
     /**
      * @zod.string.max(100)
      */
@@ -82,8 +82,8 @@ export type User = {
     status: Generated<boolean>;
 };
 export type UserAuthToken = {
-    id: Generated<string>;
-    user_id: string;
+    id: Generated<number>;
+    user_id: number;
     /**
      * @zod.string.max(500)
      */
@@ -93,8 +93,8 @@ export type UserAuthToken = {
     created_at: Generated<Timestamp>;
 };
 export type UserEmail = {
-    id: Generated<string>;
-    user_id: string | null;
+    id: Generated<number>;
+    user_id: number | null;
     is_created: Generated<boolean>;
     /**
      * @zod.string.max(256)
@@ -103,8 +103,8 @@ export type UserEmail = {
     status: Generated<boolean>;
 };
 export type UserEmailOtp = {
-    id: Generated<string>;
-    email_id: string;
+    id: Generated<number>;
+    email_id: number;
     otp: number;
     expire_at: Timestamp;
     resend_expire_at: Timestamp;
@@ -112,8 +112,8 @@ export type UserEmailOtp = {
     updated_at: Generated<Timestamp>;
 };
 export type UserRefreshToken = {
-    id: Generated<string>;
-    user_id: string;
+    id: Generated<number>;
+    user_id: number;
     /**
      * @zod.string.max(500)
      */
@@ -123,8 +123,8 @@ export type UserRefreshToken = {
     created_at: Generated<Timestamp>;
 };
 export type UserRole = {
-    id: Generated<string>;
-    user_id: string;
+    id: Generated<number>;
+    user_id: number;
     role: Roles;
     status: Generated<boolean>;
 };
