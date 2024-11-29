@@ -3,7 +3,7 @@ import { DatabaseService } from './db_connection'
 import { FoodOptionalDefaults, FoodNutrientOptionalDefaults } from '../zod/modelSchema'
 import fs from 'fs'
 import { z } from 'zod'
-import { Transaction } from 'kysely'
+import { sql, Transaction } from 'kysely'
 import { DB } from '@prism/keysley/types'
 
 /**
@@ -94,7 +94,6 @@ const errorRows: number[] = []
 const filePath = './prisma/data/zipped/FNDDS-Nutrient-Values-2021-2023.xlsx'
 const workbookReader = new Excel.stream.xlsx.WorkbookReader(filePath, {})
 const nutrientIdMap: number[] = [] // this will contain the id in the database in same order as fdcNutrientIdMap
-let nutrientsArr: Omit<FoodNutrientOptionalDefaults, 'food_id'>[][] = []
 const zNumNull = z
     .number()
     .optional()
@@ -112,6 +111,9 @@ const schema = z.tuple([
     z.number().transform((v) => v * 1000),
     ...repeatNumNull,
 ])
+
+type schemaType = z.infer<typeof schema>
+let dataArr: schemaType[] = []
 
 if (!fs.existsSync(filePath)) throw new Error(`${filePath} not found: unzip data first`)
 
@@ -135,9 +137,6 @@ export default async function seedFoodNutrients() {
     let sheetCount = 0
     for await (const worksheetReader of workbookReader) {
         let rowNumber = 0
-        let rowsInBatch = 0
-        let food: FoodOptionalDefaults[] = []
-
         //only first sheet is required to be seeded
         if (sheetCount) continue
         sheetCount++
@@ -152,74 +151,74 @@ export default async function seedFoodNutrients() {
                     rowNumber++
                     continue
                 }
-
-                rowsInBatch++
-
-                food.push({ description: data[2], fdc_id: null })
-                const nutriArr: Omit<FoodNutrientOptionalDefaults, 'food_id'>[] = []
-
-                for (let i = 5; i < data.length; i++) {
-                    const nutrient_val = data[i]
-
-                    if (!nutrient_val) continue
-
-                    nutriArr.push({
-                        nutrient_id: nutrientIdMap[i - 5],
-                        quantity: +nutrient_val, //plus sign because typescript doesn't know nutrient_val will always be number for index 5 and higher
-                    })
-                }
-                nutrientsArr.push(nutriArr)
+                dataArr.push(data)
             }
 
-            if (rowsInBatch === 500) {
+            if (dataArr.length === 200) {
                 await dbClient
                     .transaction()
-                    .execute(async (trx) => await insertToDb(trx, food, nutrientsArr))
-                rowsInBatch = 0
-                food = []
-                nutrientsArr = []
+                    .execute(async (trx) => await insertToDb(trx, dataArr))
+
+                dataArr = []
             }
 
             rowNumber++
         }
 
-        if (rowsInBatch)
+        if (dataArr.length)
             await dbClient
                 .transaction()
-                .execute(async (trx) => await insertToDb(trx, food, nutrientsArr))
+                .execute(async (trx) => await insertToDb(trx, dataArr))
     }
 
     await client.closeConnection()
     if (errorRows.length) console.error('Rows with errors:- \n', errorRows)
 }
 
-const insertToDb = async (
-    trx: Transaction<DB>,
-    food: FoodOptionalDefaults[],
-    nutrientsArr: Omit<FoodNutrientOptionalDefaults, 'food_id'>[][],
-) => {
-    console.log('--------inserting data--------------')
-    const result = await trx.insertInto('Food').values(food).executeTakeFirstOrThrow()
+const insertToDb = async (trx: Transaction<DB>, dataArray: schemaType[]) => {
+    console.log('--------locking tables--------------')
+    await trx.executeQuery(
+        sql`LOCK TABLE "Food", "FoodNutrient" IN EXCLUSIVE MODE;`.compile(trx),
+    )
 
-    const firstId = Number(result.insertId)
-    const affectedRows = result.numInsertedOrUpdatedRows
-        ? Number(result.numInsertedOrUpdatedRows)
-        : 0
+    // await trx.executeQuery(
+    //     sql`SET TRANSACTION SERIALIZABLE "Food", "FoodNutrient"`.compile(trx),
+    // )
 
-    if (!firstId || !affectedRows) throw new Error('no insertions')
+    const high =
+        (
+            await trx
+                .selectFrom('Food')
+                .select('id')
+                .orderBy('id', 'desc')
+                .limit(1)
+                .executeTakeFirst()
+        )?.id || 0
 
-    let id = firstId
+    let id = high + 1
+    const food: FoodOptionalDefaults[] = []
     const FoodNutrients: FoodNutrientOptionalDefaults[] = []
 
-    nutrientsArr.map((fNutrients) => {
-        if (id > firstId + affectedRows - 1) throw new Error('id overflow')
+    for (let i = 0; i < dataArray.length; i++, id++) {
+        const data = dataArray[i]
+        food.push({ id, description: data[2], fdc_id: null })
 
-        for (let i = 0; i < fNutrients.length; i++) {
-            FoodNutrients.push({ ...fNutrients[i], food_id: id })
+        for (let i = 5; i < data.length; i++) {
+            const nutrient_val = data[i]
+
+            if (!nutrient_val) continue
+
+            FoodNutrients.push({
+                food_id: id,
+                nutrient_id: nutrientIdMap[i - 5],
+                quantity: +nutrient_val, //plus sign because typescript doesn't know nutrient_val will always be number for index 5 and higher
+            })
         }
+    }
 
-        id++
-    })
+    console.log('--------inserting data--------------')
+    const result = await trx.insertInto('Food').values(food).returning('id').execute()
+    if (!result.length) throw new Error('No insertions into food')
 
     await trx.insertInto('FoodNutrient').values(FoodNutrients).executeTakeFirstOrThrow()
     console.log('--------insertion done--------------')
