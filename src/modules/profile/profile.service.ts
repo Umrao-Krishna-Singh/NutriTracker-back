@@ -125,6 +125,44 @@ export class ProfileService {
         else return false
     }
 
+    async createToken(
+        connection: Transaction<DB> | null,
+        userData: UserDataType,
+        type: 'auth' | 'refresh',
+    ): Promise<string> {
+        let trx: Transaction<DB> | DatabaseType | undefined
+        if (connection) trx = connection
+        else trx = this.db
+
+        const tokenInfo: Omit<tokenData, 'iat' | 'exp'> = {
+            id: userData.id,
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            status: userData.status,
+            role: [Roles.USER],
+        }
+
+        const expiresIn = type === 'auth' ? ENV.AUTH_EXPIRY : ENV.REFRESH_EXPIRY
+        const token = await this.jwtService.signAsync(tokenInfo, {
+            expiresIn,
+        })
+
+        const tokenDeatils = (await this.jwtService.decode(token)) as tokenData
+
+        const issued_at = moment(tokenDeatils.iat, 'X').utc().format(dbUtcFrmt)
+        const expire_at = moment(tokenDeatils.exp, 'X').utc().format(dbUtcFrmt)
+        const tokenData = {
+            user_id: userData.id,
+            token,
+            issued_at,
+            expire_at,
+        }
+
+        const tokenTable = type === 'auth' ? 'UserAuthToken' : 'UserRefreshToken'
+        await trx.insertInto(tokenTable).values(tokenData).executeTakeFirstOrThrow()
+        return token
+    }
+
     async signup(usr: SignupBodyDto): Promise<SignupResDto> {
         const pass_hash = await hash(usr.password, ENV.SALT_ROUNDS)
 
@@ -170,44 +208,6 @@ export class ProfileService {
         })
 
         return this.rhs.success(returnData)
-    }
-
-    async createToken(
-        connection: Transaction<DB> | null,
-        userData: UserDataType,
-        type: 'auth' | 'refresh',
-    ): Promise<string> {
-        let trx: Transaction<DB> | DatabaseType | undefined
-        if (connection) trx = connection
-        else trx = this.db
-
-        const tokenInfo: Omit<tokenData, 'iat' | 'exp'> = {
-            id: userData.id,
-            first_name: userData.first_name,
-            last_name: userData.last_name,
-            status: userData.status,
-            role: [Roles.USER],
-        }
-
-        const expiresIn = type === 'auth' ? ENV.AUTH_EXPIRY : ENV.REFRESH_EXPIRY
-        const token = await this.jwtService.signAsync(tokenInfo, {
-            expiresIn,
-        })
-
-        const tokenDeatils = (await this.jwtService.decode(token)) as tokenData
-
-        const issued_at = moment(tokenDeatils.iat, 'X').utc().format(dbUtcFrmt)
-        const expire_at = moment(tokenDeatils.exp, 'X').utc().format(dbUtcFrmt)
-        const tokenData = {
-            user_id: userData.id,
-            token,
-            issued_at,
-            expire_at,
-        }
-
-        const tokenTable = type === 'auth' ? 'UserAuthToken' : 'UserRefreshToken'
-        await trx.insertInto(tokenTable).values(tokenData).executeTakeFirstOrThrow()
-        return token
     }
 
     async checkMeOut() {
