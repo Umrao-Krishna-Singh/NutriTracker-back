@@ -75,7 +75,6 @@ export type User = {
      * @zod.string.max(126)
      */
     last_name: string;
-    is_verified: Generated<boolean>;
     weight: number | null;
     goal_weight: number | null;
     height: number | null;
