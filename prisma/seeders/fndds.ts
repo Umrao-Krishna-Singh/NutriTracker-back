@@ -181,6 +181,10 @@ const insertToDb = async (trx: Transaction<DB>, dataArray: schemaType[]) => {
         sql`LOCK TABLE "Food", "FoodNutrient" IN EXCLUSIVE MODE;`.compile(trx),
     )
 
+    // both are correct ways to lock the table. Need to lock tables because ids are manually being created
+    // to keep things relatively fast. To be accurate there is no need here because server should not
+    // be running at this point, but good to try the activity anyways.
+
     // await trx.executeQuery(
     //     sql`SET TRANSACTION SERIALIZABLE "Food", "FoodNutrient"`.compile(trx),
     // )
