@@ -24,7 +24,7 @@ export class DatabaseService {
         await this.client
             .selectFrom('User')
             .select('User.id')
-            .where('User.id', '=', '1')
+            .where('User.id', '=', 1)
             .execute()
 
         console.log('----Database Connected----')

@@ -28,7 +28,7 @@ export class DatabaseService implements OnModuleInit {
             await this.client
                 .selectFrom('User')
                 .select('User.id')
-                .where('User.id', '=', '1')
+                .where('User.id', '=', 1)
                 .execute()
 
             this.logger.log('----Database Connected----')
