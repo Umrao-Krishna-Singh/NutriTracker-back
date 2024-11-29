@@ -5,8 +5,7 @@ export type tokenData = {
     first_name: string
     last_name: string
     role: Roles[]
-    is_verified: number
-    status: number
+    status: boolean
     iat: number
     exp: number
 }
