@@ -81,8 +81,8 @@ export const otpVerEmail = (otp: number, expiry: number) => {
                 <br />
                 <strong>Please verify your email</strong>
                 <p>
-                    Please verify your email to create an account on ${projectName}. For security
-                    purposes, please verify your identity by providing the following One-Time
+                    Welcome to ${projectName}. For security purposes, please verify your
+                    identity by providing the following One-Time
                     Password (OTP).
                     <br />
                     <b>Your One-Time Password (OTP) verification code is:</b>
