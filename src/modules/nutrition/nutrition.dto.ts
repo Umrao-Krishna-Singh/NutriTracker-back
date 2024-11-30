@@ -5,11 +5,11 @@ import { Units } from '@prism/keysley/enums'
 import { co, pgReqSchema } from '@src/utils/zod-common.schema.util'
 
 export const getFoodSuggestedListSchema = z
-    .object({ search: z.string().min(1) })
+    .object({ search: z.string().min(1).toLowerCase() })
     .required()
 
 export const getFoodListFullSchema = pgReqSchema
-    .extend({ search: z.string().min(1) })
+    .extend({ search: z.string().min(1).toLowerCase() })
     .required()
 
 export const DetailsQuerySchema = pgReqSchema.extend({ id: co.number().int().min(1) })
