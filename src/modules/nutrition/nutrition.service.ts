@@ -26,8 +26,8 @@ export class NutritionService {
         return await this.db
             .selectFrom('Food')
             .select(['Food.id', 'Food.description'])
-            .where('Food.description', 'like', '%' + search + '%')
-            .orderBy(sql`LENGTH(Food.description)`, 'asc')
+            .where('description', 'like', '%' + search + '%')
+            .orderBy(sql`LENGTH(description)`, 'asc')
             .orderBy('Food.id', 'asc')
             .limit(5)
             .execute()
