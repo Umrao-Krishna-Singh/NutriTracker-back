@@ -15,6 +15,7 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp()
         const response = ctx.getResponse<FastifyReply>()
         const request = ctx.getRequest<FastifyRequest>()
+        const message = (exception as any)?.message || 'Unauthorized access'
 
         const content = `${request.method} -> ${request.url}`
         this.logger.verbose(`--- ResponseError：${content}`)
@@ -22,7 +23,7 @@ export class ForbiddenExceptionFilter implements ExceptionFilter {
         response.status(exception.getStatus()).type('application/json').send({
             status: false,
             code: exception.getStatus(),
-            message: 'Unauthorized access',
+            message,
         })
     }
 }
