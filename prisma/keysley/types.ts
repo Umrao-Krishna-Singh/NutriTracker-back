@@ -80,17 +80,6 @@ export type User = {
     height: number | null;
     status: Generated<boolean>;
 };
-export type UserAuthToken = {
-    id: Generated<number>;
-    user_id: number;
-    /**
-     * @zod.string.max(500)
-     */
-    token: string;
-    issued_at: Timestamp;
-    expire_at: Timestamp;
-    created_at: Generated<Timestamp>;
-};
 export type UserEmail = {
     id: Generated<number>;
     user_id: number | null;
@@ -135,7 +124,6 @@ export type DB = {
     Nutrient: Nutrient;
     Tag: Tag;
     User: User;
-    UserAuthToken: UserAuthToken;
     UserEmail: UserEmail;
     UserEmailOtp: UserEmailOtp;
     UserRefreshToken: UserRefreshToken;
