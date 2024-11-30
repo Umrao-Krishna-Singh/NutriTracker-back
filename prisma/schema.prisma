@@ -46,7 +46,6 @@ model User {
   goal_weight Int? @db.Integer()
   height Int? @db.Integer()
   status Boolean @default(true)
-  user_auth_token UserAuthToken[]
   user_refresh_token UserRefreshToken[]
   user_role UserRole[]
   user_email UserEmail[]
@@ -66,21 +65,11 @@ model UserRole {
   @@unique([user_id, role, status])
 }
 
-model UserAuthToken {
-  id Int @id @db.Integer() @default(autoincrement())
-  user User @relation(fields: [user_id], references: [id])
-  user_id Int @db.Integer()
-  /// @zod.string.max(500)
-  token String @db.VarChar(500) @unique
-  issued_at DateTime
-  expire_at DateTime
-  created_at DateTime @default(now())
-}
 
 model UserRefreshToken {
   id Int @id @db.Integer() @default(autoincrement())
   user User @relation(fields: [user_id], references: [id])
-  user_id Int @db.Integer()
+  user_id Int @db.Integer() @unique
   /// @zod.string.max(500)
   token String @db.VarChar(500) @unique
   issued_at DateTime
