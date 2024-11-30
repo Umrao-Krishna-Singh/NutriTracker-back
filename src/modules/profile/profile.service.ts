@@ -3,31 +3,25 @@ import { Injectable, Inject, Logger, BadRequestException } from '@nestjs/common'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
 import {
     EmailCheckResDto,
+    LoginBodyDto,
+    LoginResDto,
     SignupBodyDto,
     SignupResDto,
     SignupResItem,
+    UserUpdateBodyDto,
+    UserUpdateResDto,
 } from './profile.dto'
 import { ResHelperService } from '@src/response-helpers/res-help.service'
 import { ENV } from '@src/app.config'
-import { hash } from 'bcrypt'
+import { hash, compare } from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import type { tokenData } from '@src/utils/jwt-payload.util'
+import type { TokenData, UserInfo } from '@src/utils/auth-payload.util'
 import { Roles } from '@prism/keysley/enums'
 import * as moment from 'moment'
 import { sendOtpMail } from '@src/utils/send-otp.util'
 import { dbUtcFrmt } from '@src/constants/system.constant'
 import { Transaction } from 'kysely'
 import { DB } from '@prism/keysley/types'
-
-type UserDataType = {
-    status: boolean
-    first_name: string
-    last_name: string
-    weight: number | null
-    goal_weight: number | null
-    height: number | null
-    id: number
-}
 
 @Injectable()
 export class ProfileService {
@@ -36,7 +30,7 @@ export class ProfileService {
 
     constructor(
         @Inject(DatabaseService) database: DatabaseService,
-        private rhs: ResHelperService,
+        private RHS: ResHelperService,
         private jwtService: JwtService,
     ) {
         this.db = database.db()
@@ -57,15 +51,15 @@ export class ProfileService {
             .where('email', '=', email)
             .executeTakeFirst()
 
-        if (user?.is_created) return this.rhs.success(true)
+        if (user?.is_created) return this.RHS.success(true)
 
         if (!user || !user.status) {
             await this.createEmailAndSendOtp(email)
-            return this.rhs.success(false)
+            return this.RHS.success(false)
         } else if (!user.is_created) {
             await this.createEmailAndSendOtp(email, user.resend)
-            return this.rhs.success(false)
-        } else return this.rhs.success(true)
+            return this.RHS.success(false)
+        } else return this.RHS.success(true)
     }
 
     async createEmailAndSendOtp(email: string, resend?: Date): Promise<void> {
@@ -73,12 +67,11 @@ export class ProfileService {
         if (resend && moment(resend, dbUtcFrmt).isAfter(currentDate)) return
 
         const otp = this.generateOtp()
-        const expire_at = moment().add(ENV.OTP_EXPIRY, 'minutes').utc().format(dbUtcFrmt)
+        const expire_at = moment().add(ENV.OTP_EXPIRY, 'minutes').format(dbUtcFrmt)
         const resend_expire_at = moment()
             .add(ENV.OTP_RESEND_EXPIRY, 'minutes')
-            .utc()
             .format(dbUtcFrmt)
-        const updated_at = moment().utc().format(dbUtcFrmt)
+        const updated_at = moment().format(dbUtcFrmt)
 
         await this.db.transaction().execute(async (trx) => {
             const userEmail = { email }
@@ -87,7 +80,7 @@ export class ProfileService {
                 await trx
                     .insertInto('UserEmail')
                     .values(userEmail)
-                    .onDuplicateKeyUpdate(dupEmailKey)
+                    .onConflict((oc) => oc.column('email').doUpdateSet(dupEmailKey))
                     .returning('id')
                     .executeTakeFirstOrThrow()
             ).id
@@ -98,7 +91,7 @@ export class ProfileService {
             await trx
                 .insertInto('UserEmailOtp')
                 .values(userOtp)
-                .onDuplicateKeyUpdate(dupOtpKey)
+                .onConflict((oc) => oc.column('email_id').doUpdateSet(dupOtpKey))
                 .executeTakeFirstOrThrow()
 
             await sendOtpMail(email, otp)
@@ -127,19 +120,20 @@ export class ProfileService {
 
     async createToken(
         connection: Transaction<DB> | null,
-        userData: UserDataType,
+        userData: Omit<TokenData, 'iat' | 'exp' | 'type'>,
         type: 'auth' | 'refresh',
     ): Promise<string> {
         let trx: Transaction<DB> | DatabaseType | undefined
         if (connection) trx = connection
         else trx = this.db
 
-        const tokenInfo: Omit<tokenData, 'iat' | 'exp'> = {
+        const tokenInfo: Omit<TokenData, 'iat' | 'exp'> = {
             id: userData.id,
             first_name: userData.first_name,
             last_name: userData.last_name,
             status: userData.status,
-            role: [Roles.USER],
+            role: userData.role,
+            type,
         }
 
         const expiresIn = type === 'auth' ? ENV.AUTH_EXPIRY : ENV.REFRESH_EXPIRY
@@ -147,30 +141,29 @@ export class ProfileService {
             expiresIn,
         })
 
-        const tokenDeatils = (await this.jwtService.decode(token)) as tokenData
-
+        const tokenDeatils = (await this.jwtService.decode(token)) as TokenData
         const issued_at = moment(tokenDeatils.iat, 'X').utc().format(dbUtcFrmt)
         const expire_at = moment(tokenDeatils.exp, 'X').utc().format(dbUtcFrmt)
-        const tokenData = {
-            user_id: userData.id,
-            token,
-            issued_at,
-            expire_at,
-        }
+        const tokenData = { user_id: userData.id, token, issued_at, expire_at }
+        const dupToken = { token, issued_at, expire_at }
 
-        const tokenTable = type === 'auth' ? 'UserAuthToken' : 'UserRefreshToken'
-        await trx.insertInto(tokenTable).values(tokenData).executeTakeFirstOrThrow()
+        if (type === 'refresh')
+            await trx
+                .insertInto('UserRefreshToken')
+                .values(tokenData)
+                .onConflict((oc) => oc.column('user_id').doUpdateSet(dupToken))
+                .executeTakeFirstOrThrow()
+
         return token
     }
 
     async signup(usr: SignupBodyDto): Promise<SignupResDto> {
-        const pass_hash = await hash(usr.password, ENV.SALT_ROUNDS)
-
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, otp, ...rest } = usr
+        const { password, otp, email, ...rest } = usr
+        const pass_hash = await hash(password, ENV.SALT_ROUNDS)
         const user = { ...rest, pass_hash }
 
-        const isVerified = await this.verifyEmail(user.email, otp)
+        const isVerified = await this.verifyEmail(email, otp)
         if (!isVerified) throw new BadRequestException('Invalid OTP!')
 
         let returnData: SignupResItem | null = null
@@ -194,12 +187,12 @@ export class ProfileService {
             await trx
                 .updateTable('UserEmail')
                 .set({ user_id: userData.id, is_created: true })
-                .where('UserEmail.email', '=', user.email)
+                .where('UserEmail.email', '=', email)
                 .executeTakeFirstOrThrow()
 
             const [auth_token, refresh_token] = await Promise.all([
-                this.createToken(trx, userData, 'auth'),
-                this.createToken(trx, userData, 'refresh'),
+                this.createToken(trx, { ...userData, role: [Roles.USER] }, 'auth'),
+                this.createToken(trx, { ...userData, role: [Roles.USER] }, 'refresh'),
             ])
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -207,7 +200,61 @@ export class ProfileService {
             returnData = { ...returnInfo, auth_token, refresh_token, role: [Roles.USER] }
         })
 
-        return this.rhs.success(returnData)
+        return this.RHS.success(returnData)
+    }
+
+    async login(userInfo: UserInfo): Promise<LoginResDto> {
+        if (!userInfo.length) throw new BadRequestException('Invalid Credentials!')
+        const userRoles = userInfo.map((v) => v.role)
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { role, ...userData } = userInfo[0]
+
+        const [auth_token, refresh_token] = await Promise.all([
+            this.createToken(null, { ...userData, role: userRoles }, 'auth'),
+            this.createToken(null, { ...userData, role: userRoles }, 'refresh'),
+        ])
+
+        const user = { ...userData, auth_token, refresh_token, role: userRoles }
+        return this.RHS.success(user)
+    }
+
+    async refreshToken(token: TokenData): Promise<LoginResDto> {
+        const [auth_token, refresh_token] = await Promise.all([
+            this.createToken(null, token, 'auth'),
+            this.createToken(null, token, 'refresh'),
+        ])
+
+        return this.RHS.success({
+            id: token.id,
+            first_name: token.first_name,
+            last_name: token.last_name,
+            role: token.role,
+            status: token.status,
+            auth_token,
+            refresh_token,
+        })
+    }
+
+    async UpdateUser(
+        input: UserUpdateBodyDto,
+        token: TokenData,
+    ): Promise<UserUpdateResDto> {
+        const userData = await this.db
+            .updateTable('User')
+            .set(input)
+            .where('id', '=', token.id)
+            .returning([
+                'id',
+                'first_name',
+                'last_name',
+                'weight',
+                'goal_weight',
+                'height',
+            ])
+            .executeTakeFirstOrThrow()
+
+        return this.RHS.success({ ...userData, role: token.role })
     }
 
     async checkMeOut() {
