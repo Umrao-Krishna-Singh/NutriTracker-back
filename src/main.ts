@@ -35,6 +35,8 @@ async function bootstrap() {
             .setDescription('Apis to interact with Nutritracker Backend')
             .setVersion('1.0')
             .addTag('APIs')
+            .addBearerAuth()
+            .addBasicAuth()
             .build()
         const documentFactory = () => SwaggerModule.createDocument(app, config)
         SwaggerModule.setup(swaggerEndpoint, app, documentFactory)
