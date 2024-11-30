@@ -43,8 +43,8 @@ export class NutritionService {
                 'Food.description',
                 sql<number>`COUNT(*) OVER()`.as('total_count'),
             ])
-            .where('Food.description', 'like', '%' + search + '%')
-            .orderBy(sql`LENGTH(Food.description)`, 'asc')
+            .where('description', 'like', '%' + search + '%')
+            .orderBy(sql`LENGTH(description)`, 'asc')
             .orderBy('Food.id', 'asc')
             .offset((page - 1) * limit)
             .limit(limit)
