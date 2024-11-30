@@ -17,7 +17,7 @@ export class NutritionService {
 
     constructor(
         @Inject(DatabaseService) database: DatabaseService,
-        private readonly rhs: ResHelperService,
+        private readonly RHS: ResHelperService,
     ) {
         this.db = database.db()
     }
@@ -50,7 +50,7 @@ export class NutritionService {
             .limit(limit)
             .execute()
 
-        return this.rhs.paginate(data, page, limit)
+        return this.RHS.paginate(data, page, limit)
     }
 
     async getFoodDetails(
@@ -76,6 +76,6 @@ export class NutritionService {
             .limit(limit)
             .execute()
 
-        return this.rhs.paginate(foodDetails, page, limit)
+        return this.RHS.paginate(foodDetails, page, limit)
     }
 }

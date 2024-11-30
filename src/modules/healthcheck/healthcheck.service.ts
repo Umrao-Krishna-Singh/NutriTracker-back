@@ -8,7 +8,7 @@ export class HealthCheckService {
     private db: DatabaseType
     constructor(
         @Inject(DatabaseService) database: DatabaseService,
-        private readonly rhs: ResHelperService,
+        private readonly RHS: ResHelperService,
     ) {
         this.db = database.db()
     }
@@ -21,6 +21,6 @@ export class HealthCheckService {
             .where('User.id', '=', 1)
             .execute()
 
-        return this.rhs.success('Success from backend!')
+        return this.RHS.success('Success from backend!')
     }
 }
