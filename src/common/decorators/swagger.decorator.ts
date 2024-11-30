@@ -7,10 +7,12 @@ import {
     ApiInternalServerErrorResponse,
     ApiResponseNoStatusOptions,
     ApiOkResponse,
+    ApiBearerAuth,
+    ApiBasicAuth,
 } from '@nestjs/swagger'
 import { Roles } from '@prism/keysley/enums'
 import { Role } from './role.decorator'
-import { AuthGuard } from '../guards/auth.guard'
+import { BasicAuthGuard, BearerAuthGuard } from '../guards/auth.guard'
 
 class Unauth {
     @ApiProperty({ example: false })
@@ -74,7 +76,7 @@ export function ApiAuthorizedResponse(
     return applyDecorators(
         HttpCode(code),
         Role(...options.roles),
-        UseGuards(AuthGuard),
+        UseGuards(BearerAuthGuard),
         ApiOkResponse(options),
         ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
         ApiUnauthorizedResponse({
@@ -106,7 +108,7 @@ export function ApiOpenResponse(
     )
 }
 
-export function ApiAuthenticatedResponse(
+export function ApiBasicAuthenticatedResponse(
     options: ApiResponseNoStatusOptions & { statusCode?: HttpStatus },
 ) {
     if (!options.description) options.description = 'Success'
@@ -114,7 +116,31 @@ export function ApiAuthenticatedResponse(
 
     return applyDecorators(
         HttpCode(code),
-        UseGuards(AuthGuard),
+        ApiBasicAuth(),
+        UseGuards(BasicAuthGuard),
+        ApiOkResponse(options),
+        ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
+        ApiUnauthorizedResponse({
+            type: Unauth,
+            description: 'Authentication Exception',
+        }),
+        ApiInternalServerErrorResponse({
+            type: InternalError,
+            description: 'Server Exception',
+        }),
+    )
+}
+
+export function ApiAuthenticatedRes(
+    options: ApiResponseNoStatusOptions & { statusCode?: HttpStatus },
+) {
+    if (!options.description) options.description = 'Success'
+    const code = options?.statusCode || 200
+
+    return applyDecorators(
+        HttpCode(code),
+        ApiBearerAuth(),
+        UseGuards(BearerAuthGuard),
         ApiOkResponse(options),
         ApiBadRequestResponse({ type: BadReq, description: 'Validation Exception' }),
         ApiUnauthorizedResponse({
