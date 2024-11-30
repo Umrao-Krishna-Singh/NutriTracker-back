@@ -88,21 +88,6 @@ export class SignupResDto extends SuccessDto {
     data!: SignupResItem | null
 }
 
-export const loginSchema = emailCheckSchema.extend({
-    password: z.string().trim().min(12).max(35),
-})
-
-export class LoginBodyDto {
-    @ApiProperty({
-        example: 'a great and amazing password',
-        minLength: 12,
-        maxLength: 35,
-    })
-    password!: string
-    @ApiProperty({ example: 'mynew@email.com', maxLength: 256 })
-    email!: string
-}
-
 export class LoginResValue {
     @ApiProperty({ example: 5 })
     id!: number

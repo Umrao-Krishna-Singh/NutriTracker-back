@@ -3,7 +3,6 @@ import { Injectable, Inject, Logger, BadRequestException } from '@nestjs/common'
 import { DatabaseService, DatabaseType } from '@src/database/db.service'
 import {
     EmailCheckResDto,
-    LoginBodyDto,
     LoginResDto,
     SignupBodyDto,
     SignupResDto,
@@ -13,7 +12,7 @@ import {
 } from './profile.dto'
 import { ResHelperService } from '@src/response-helpers/res-help.service'
 import { ENV } from '@src/app.config'
-import { hash, compare } from 'bcrypt'
+import { hash } from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import type { TokenData, UserInfo } from '@src/utils/auth-payload.util'
 import { Roles } from '@prism/keysley/enums'

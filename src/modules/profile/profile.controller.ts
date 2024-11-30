@@ -16,7 +16,7 @@ import {
 } from './profile.dto'
 import {
     ApiAuthenticatedRes,
-    ApiAuthorizedResponse,
+    // ApiAuthorizedResponse,
     ApiOpenResponse,
     ApiBasicAuthenticatedResponse,
 } from '@src/common/decorators/swagger.decorator'
