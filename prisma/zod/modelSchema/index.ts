@@ -1,6 +1,5 @@
 export * from './UserSchema';
 export * from './UserRoleSchema';
-export * from './UserAuthTokenSchema';
 export * from './UserRefreshTokenSchema';
 export * from './UserEmailSchema';
 export * from './UserEmailOtpSchema';

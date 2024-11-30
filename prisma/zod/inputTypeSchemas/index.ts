@@ -1,7 +1,6 @@
 export { TransactionIsolationLevelSchema } from './TransactionIsolationLevelSchema';
 export { UserScalarFieldEnumSchema } from './UserScalarFieldEnumSchema';
 export { UserRoleScalarFieldEnumSchema } from './UserRoleScalarFieldEnumSchema';
-export { UserAuthTokenScalarFieldEnumSchema } from './UserAuthTokenScalarFieldEnumSchema';
 export { UserRefreshTokenScalarFieldEnumSchema } from './UserRefreshTokenScalarFieldEnumSchema';
 export { UserEmailScalarFieldEnumSchema } from './UserEmailScalarFieldEnumSchema';
 export { UserEmailOtpScalarFieldEnumSchema } from './UserEmailOtpScalarFieldEnumSchema';
